@@ -15,7 +15,9 @@
 use std::sync::Arc;
 use std::sync::Mutex;
 
-use cybergarage::net::{MulticastManager};
+use cybergarage::net::MulticastManager;
+
+use crate::default::{MULTICAST_V4_ADDR, MULTICAST_V6_ADDR, PORT};
 
 pub struct Client {
     transport_mgr: MulticastManager,
@@ -35,10 +37,12 @@ impl Client {
     }
 
     pub fn start(&mut self) -> bool {
-        if !self.transport_mgr.is_running() {            
-            // if !self.transport_mgr.start() {
-            //     return false;
-            // }
+        if self.transport_mgr.is_running() {
+            return true;
+        }
+        let addrs = vec![MULTICAST_V6_ADDR, MULTICAST_V4_ADDR];
+        if !self.transport_mgr.start(&addrs, PORT) {
+            return false;
         }
         true
     }
