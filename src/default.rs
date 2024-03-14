@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::net::{Ipv4Addr, Ipv6Addr};
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
-pub const MULTICAST_V4_ADDRESS: Ipv4Addr = Ipv4Addr::new(224, 0, 0, 251);
-pub const MULTICAST_V6_ADDRESS: Ipv6Addr = Ipv6Addr::new(0xff, 0x02, 0, 0, 0, 0, 0, 0xfb);
+pub const MULTICAST_V4_ADDR: IpAddr = IpAddr::V4(Ipv4Addr::new(224, 0, 0, 251));
+pub const MULTICAST_V6_ADDR: IpAddr = IpAddr::V6(Ipv6Addr::new(0xff, 0x02, 0, 0, 0, 0, 0, 0xfb));
 pub const PORT: u16 = 5353;
-pub const MAX_PACKET_SIZE: usize = 512;
