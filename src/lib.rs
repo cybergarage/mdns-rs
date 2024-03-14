@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-pub use self::client::{Client};
+pub use self::client::Client;
 
 mod client;
 mod default;
