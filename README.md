@@ -1,7 +1,7 @@
 # mdns-rs
 
 ![](https://img.shields.io/badge/status-Work%20In%20Progress-8A2BE2)
-[![cargo-test](https://github.com/cybergarage/uecho-rs/actions/workflows/cargo.yml/badge.svg)](https://github.com/cybergarage/mdns-rs/actions/workflows/cargo.yml)
+[![cargo-test](https://github.com/cybergarage/mdns-rs/actions/workflows/cargo.yml/badge.svg)](https://github.com/cybergarage/mdns-rs/actions/workflows/cargo.yml)
 
 mdns-rs is a Rust library for Multicast DNS (mDNS) and DNS Service Discovery (DNS-SD) as defined in [RFC 6762](https://www.rfc-editor.org/rfc/rfc6762) and [RFC 6763](https://www.rfc-editor.org/rfc/rfc6763).
 
