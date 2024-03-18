@@ -37,5 +37,8 @@ doc: format
 test: build
 	cargo test -- --test-threads=1
 
+browse:
+	cargo run --bin mdns-browse -v
+
 watchtest:
 	fswatch -o . -e ".*" -i "\\.rs$$" | xargs -n1 -I{} make test
