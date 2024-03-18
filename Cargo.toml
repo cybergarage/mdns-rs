@@ -7,3 +7,7 @@ edition = "2021"
 
 [dependencies]
 cybergarage = { git = "https://github.com/cybergarage/cybergarage-rs.git" }
+
+[[bin]]
+name = "mdns-browse"
+path = "bin/mdns-browse/mdns-browse.rs"
