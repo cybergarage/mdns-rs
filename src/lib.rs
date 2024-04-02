@@ -14,6 +14,8 @@
 
 pub use self::client::Client;
 
+mod dns;
+
 mod client;
 mod default;
 
