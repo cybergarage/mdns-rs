@@ -15,13 +15,11 @@
 use std::fmt;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
-pub struct Message {
-}
+pub struct Message {}
 
 impl Message {
     pub fn new() -> Message {
-        Message {
-        }
+        Message {}
     }
 
     pub fn from_bytes(msg_bytes: &[u8]) -> Message {
