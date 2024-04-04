@@ -58,6 +58,17 @@ impl Message {
         Ok(msg)
     }
 
+    /// ID returns the query identifier.
+    /// RFC 6762: 18.1. ID (Query Identifier)
+    /// In multicast query messages, the Query Identifier SHOULD be set to zero on transmission.
+    /// In multicast responses, including unsolicited multicast responses, the Query Identifier MUST be set to zero on transmission, and MUST be ignored on reception.
+    pub fn ID(&self) -> u16 {
+        ((self.header[0] as u16) << 8) | (self.header[1] as u16)
+    }
+
+    /// QR returns the query type.
+    /// RFC 6762: 18.2. QR (Query/Response) Bit
+    /// In query messages the QR bit MUST be zero. In response messages the QR bit MUST be one.
     pub fn QR(&self) -> QR {
         if (self.header[2] & 0x80) == 0 {
             return QR::Query;
