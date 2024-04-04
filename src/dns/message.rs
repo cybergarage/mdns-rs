@@ -97,6 +97,14 @@ impl Message {
         (self.header[2] & 0x04) == 0x04
     }
 
+    /// TC returns the truncated bit.
+    /// RFC 6762: 18.5. TC (Truncated) Bit
+    /// In query messages, if the TC bit is set, it means that additional Known-Answer records may be following shortly. A responder SHOULD record this fact, and wait for those additional Known-Answer records, before deciding whether to respond. If the TC bit is clear, it means that the querying host has no additional Known Answers.
+    /// In multicast response messages, the TC bit MUST be zero on transmission, and MUST be ignored on reception.
+    pub fn TC(&self) -> bool {
+        (self.header[2] & 0x02) == 0x02
+    }
+
     pub fn parse(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
         let ret = self.parse_header(msg_bytes);
         if ret.is_err() {
