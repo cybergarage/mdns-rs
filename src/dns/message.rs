@@ -79,7 +79,7 @@ impl Message {
     /// Opcode returns the kind of query.
     /// RFC 6762: 18.3. OPCODE
     /// In both multicast query and multicast response messages, the OPCODE MUST be zero on transmission (only standard queries are currently supported over multicast).
-    pub fn Opcode(&self) -> Opcode {
+    pub fn opcode(&self) -> Opcode {
         let opcode = ((self.header[2] & 0x78) >> 3) & 0x0F;
         match opcode {
             0 => Opcode::Query,
@@ -110,6 +110,20 @@ impl Message {
     /// In both multicast query and multicast response messages, the Recursion Desired bit SHOULD be zero on transmission, and MUST be ignored on reception.
     pub fn RD(&self) -> bool {
         (self.header[2] & 0x01) == 0x01
+    }
+
+    /// RA returns the recursion available bit.
+    /// RFC 6762: 18.7. RA (Recursion Available) Bit
+    /// In both multicast query and multicast response messages, the Recursion Available bit MUST be zero on transmission, and MUST be ignored on reception.
+    pub fn RA(&self) -> bool {
+        (self.header[3] & 0x80) == 0x80
+    }
+
+    /// Z returns the zero bit.
+    /// RFC 6762: 18.8. Z (Zero) Bit
+    /// In both query and response messages, the Zero bit MUST be zero on transmission, and MUST be ignored on reception.
+    pub fn Z(&self) -> bool {
+        (self.header[3] & 0x40) == 0x40
     }
 
     pub fn parse(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
