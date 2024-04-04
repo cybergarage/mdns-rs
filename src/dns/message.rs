@@ -18,18 +18,21 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
 const HEADER_SIZE: usize = 12;
 
+/// QR represents the query type.
 #[derive(PartialEq)]
 pub enum QR {
     Query = 0,
     Response = 1,
 }
 
+/// Opcode represents the kind of query.
 pub enum Opcode {
     Query = 0,
     IQuery = 1,
     Status = 2,
 }
 
+/// ResponseCode represents the response code.
 pub enum ResponseCode {
     NoError = 0,
     FormatError = 1,
@@ -39,17 +42,21 @@ pub enum ResponseCode {
     Refused = 5,
 }
 
+/// Message represents a DNS message.
 pub struct Message {
     header: [u8; HEADER_SIZE],
 }
 
+/// Message represents a DNS message.
 impl Message {
+    /// new creates a new message.
     pub fn new() -> Message {
         Message {
             header: [0; HEADER_SIZE],
         }
     }
 
+    /// from_bytes creates a new message from the specified bytes.
     pub fn from_bytes(msg_bytes: &[u8]) -> Result<Message, MessageError> {
         let mut msg = Message::new();
         let ret = msg.parse(msg_bytes);
