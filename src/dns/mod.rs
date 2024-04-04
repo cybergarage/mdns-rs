@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+pub use self::error::*;
 pub use self::message::*;
 
+mod error;
 mod message;
 mod message_test;
