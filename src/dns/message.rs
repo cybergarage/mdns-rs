@@ -126,6 +126,12 @@ impl Message {
         (self.header[3] & 0x40) == 0x40
     }
 
+    /// AD returns the authentic data bit.
+    /// RFC 6762: 18.9. AD (Authentic Data) Bit
+    /// In both multicast query and multicast response messages, the Authentic Data bit [RFC2535] MUST be zero on transmission, and MUST be ignored on reception.
+    pub fn AD(&self) -> bool {
+        (self.header[3] & 0x20) == 0x20
+    }
     pub fn parse(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
         let ret = self.parse_header(msg_bytes);
         if ret.is_err() {
