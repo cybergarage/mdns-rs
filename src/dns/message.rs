@@ -12,31 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::dns::error::MessageError;
 use std::fmt;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
-pub struct Message {}
+const HEADER_SIZE: usize = 12;
+
+pub struct Message {
+    header: [u8; HEADER_SIZE],
+}
 
 impl Message {
     pub fn new() -> Message {
-        Message {}
-    }
-
-    pub fn from_bytes(msg_bytes: &[u8]) -> Message {
-        let mut msg = Message::new();
-        msg.parse(msg_bytes);
-        msg
-    }
-
-    pub fn parse(&mut self, msg: &[u8]) -> bool {
-        if !self.parse_header(msg) {
-            return false;
+        Message {
+            header: [0; HEADER_SIZE],
         }
-        true
     }
 
-    fn parse_header(&mut self, header: &[u8]) -> bool {
-        true
+    pub fn from_bytes(msg_bytes: &[u8]) -> Result<Message, MessageError> {
+        let mut msg = Message::new();
+        let ret = match msg.parse(msg_bytes) {
+            Ok(()) => Ok(msg),
+            Err(e) => Err(e),
+        };
+        Ok(msg)
+    }
+
+    pub fn parse(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
+        let ret = self.parse_header(msg_bytes);
+        if ret.is_err() {
+            return Err(ret.err().unwrap());
+        };
+        Ok(())
+    }
+
+    fn parse_header(&mut self, header_bytes: &[u8]) -> Result<(), MessageError> {
+        if header_bytes.len() < HEADER_SIZE {
+            return Err(MessageError::new(header_bytes, 0));
+        }
+        Ok(())
     }
 
     pub fn equals(&self, msg: &Message) -> bool {
