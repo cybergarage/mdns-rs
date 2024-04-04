@@ -76,6 +76,18 @@ impl Message {
         QR::Response
     }
 
+    /// Opcode returns the kind of query.
+    /// RFC 6762: 18.3. OPCODE
+    /// In both multicast query and multicast response messages, the OPCODE MUST be zero on transmission (only standard queries are currently supported over multicast).
+    pub fn Opcode(&self) -> Opcode {
+        let opcode = ((self.header[2] & 0x78) >> 3) & 0x0F;
+        match opcode {
+            0 => Opcode::Query,
+            1 => Opcode::IQuery,
+            2 => Opcode::Status,
+            _ => Opcode::Query,
+        }
+    }
     pub fn parse(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
         let ret = self.parse_header(msg_bytes);
         if ret.is_err() {
