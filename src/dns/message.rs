@@ -18,6 +18,26 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
 const HEADER_SIZE: usize = 12;
 
+pub enum QR {
+    Query = 0,
+    Response = 1,
+}
+
+pub enum Opcode {
+    Query = 0,
+    IQuery = 1,
+    Status = 2,
+}
+
+pub enum ResponseCode {
+    NoError = 0,
+    FormatError = 1,
+    ServerFailure = 2,
+    NameError = 3,
+    NotImplemented = 4,
+    Refused = 5,
+}
+
 pub struct Message {
     header: [u8; HEADER_SIZE],
 }
@@ -36,6 +56,13 @@ impl Message {
             return Err(ret.err().unwrap());
         };
         Ok(msg)
+    }
+
+    pub fn QR(&self) -> QR {
+        if (self.header[2] & 0x80) == 0 {
+            return QR::Query;
+        }
+        QR::Response
     }
 
     pub fn parse(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
