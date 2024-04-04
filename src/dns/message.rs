@@ -105,6 +105,13 @@ impl Message {
         (self.header[2] & 0x02) == 0x02
     }
 
+    /// RD returns the recursion desired bit.
+    /// RFC 6762: 18.6. RD (Recursion Desired) Bit
+    /// In both multicast query and multicast response messages, the Recursion Desired bit SHOULD be zero on transmission, and MUST be ignored on reception.
+    pub fn RD(&self) -> bool {
+        (self.header[2] & 0x01) == 0x01
+    }
+
     pub fn parse(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
         let ret = self.parse_header(msg_bytes);
         if ret.is_err() {
