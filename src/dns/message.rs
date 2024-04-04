@@ -88,6 +88,15 @@ impl Message {
             _ => Opcode::Query,
         }
     }
+
+    /// AA returns the authoritative answer bit.
+    /// RFC 6762: 18.4. AA (Authoritative Answer) Bit
+    /// In query messages, the Authoritative Answer bit MUST be zero on transmission, and MUST be ignored on reception.
+    /// In response messages for Multicast domains, the Authoritative Answer bit MUST be set to one (not setting this bit would imply there's some other place where "better" information may be found) and MUST be ignored on reception.
+    pub fn AA(&self) -> bool {
+        (self.header[2] & 0x04) == 0x04
+    }
+
     pub fn parse(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
         let ret = self.parse_header(msg_bytes);
         if ret.is_err() {
