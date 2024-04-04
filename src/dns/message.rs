@@ -58,18 +58,18 @@ impl Message {
         Ok(msg)
     }
 
-    /// ID returns the query identifier.
+    /// id returns the query identifier.
     /// RFC 6762: 18.1. ID (Query Identifier)
     /// In multicast query messages, the Query Identifier SHOULD be set to zero on transmission.
     /// In multicast responses, including unsolicited multicast responses, the Query Identifier MUST be set to zero on transmission, and MUST be ignored on reception.
-    pub fn ID(&self) -> u16 {
+    pub fn id(&self) -> u16 {
         ((self.header[0] as u16) << 8) | (self.header[1] as u16)
     }
 
-    /// QR returns the query type.
+    /// qr returns the query type.
     /// RFC 6762: 18.2. QR (Query/Response) Bit
     /// In query messages the QR bit MUST be zero. In response messages the QR bit MUST be one.
-    pub fn QR(&self) -> QR {
+    pub fn qr(&self) -> QR {
         if (self.header[2] & 0x80) == 0 {
             return QR::Query;
         }
@@ -89,57 +89,119 @@ impl Message {
         }
     }
 
-    /// AA returns the authoritative answer bit.
+    /// aa returns the authoritative answer bit.
     /// RFC 6762: 18.4. AA (Authoritative Answer) Bit
     /// In query messages, the Authoritative Answer bit MUST be zero on transmission, and MUST be ignored on reception.
     /// In response messages for Multicast domains, the Authoritative Answer bit MUST be set to one (not setting this bit would imply there's some other place where "better" information may be found) and MUST be ignored on reception.
-    pub fn AA(&self) -> bool {
+    pub fn aa(&self) -> bool {
         (self.header[2] & 0x04) == 0x04
     }
 
-    /// TC returns the truncated bit.
+    /// tc returns the truncated bit.
     /// RFC 6762: 18.5. TC (Truncated) Bit
     /// In query messages, if the TC bit is set, it means that additional Known-Answer records may be following shortly. A responder SHOULD record this fact, and wait for those additional Known-Answer records, before deciding whether to respond. If the TC bit is clear, it means that the querying host has no additional Known Answers.
     /// In multicast response messages, the TC bit MUST be zero on transmission, and MUST be ignored on reception.
-    pub fn TC(&self) -> bool {
+    pub fn tc(&self) -> bool {
         (self.header[2] & 0x02) == 0x02
     }
 
-    /// RD returns the recursion desired bit.
+    /// rd returns the recursion desired bit.
     /// RFC 6762: 18.6. RD (Recursion Desired) Bit
     /// In both multicast query and multicast response messages, the Recursion Desired bit SHOULD be zero on transmission, and MUST be ignored on reception.
-    pub fn RD(&self) -> bool {
+    pub fn rd(&self) -> bool {
         (self.header[2] & 0x01) == 0x01
     }
 
-    /// RA returns the recursion available bit.
+    /// ra returns the recursion available bit.
     /// RFC 6762: 18.7. RA (Recursion Available) Bit
     /// In both multicast query and multicast response messages, the Recursion Available bit MUST be zero on transmission, and MUST be ignored on reception.
-    pub fn RA(&self) -> bool {
+    pub fn ra(&self) -> bool {
         (self.header[3] & 0x80) == 0x80
     }
 
-    /// Z returns the zero bit.
+    /// z returns the zero bit.
     /// RFC 6762: 18.8. Z (Zero) Bit
     /// In both query and response messages, the Zero bit MUST be zero on transmission, and MUST be ignored on reception.
-    pub fn Z(&self) -> bool {
+    pub fn z(&self) -> bool {
         (self.header[3] & 0x40) == 0x40
     }
 
-    /// AD returns the authentic data bit.
+    /// ad returns the authentic data bit.
     /// RFC 6762: 18.9. AD (Authentic Data) Bit
     /// In both multicast query and multicast response messages, the Authentic Data bit [RFC2535] MUST be zero on transmission, and MUST be ignored on reception.
-    pub fn AD(&self) -> bool {
+    pub fn ad(&self) -> bool {
         (self.header[3] & 0x20) == 0x20
     }
 
-    /// CD returns the checking disabled bit.
+    /// cd returns the checking disabled bit.
     /// RFC 6762: 18.10. CD (Checking Disabled) Bit
     /// In both multicast query and multicast response messages, the Checking Disabled bit [RFC2535] MUST be zero on transmission, and MUST be ignored on reception.
-    pub fn CD(&self) -> bool {
+    pub fn cd(&self) -> bool {
         (self.header[3] & 0x10) == 0x10
     }
 
+    /// response_code returns the checking disabled bit.
+    /// RFC 6762: 18.11. RCODE (Response Code)
+    /// In both multicast query and multicast response messages, the Response Code MUST be zero on transmission. Multicast DNS messages received with non-zero Response Codes MUST be silently ignored.
+    pub fn response_code(&self) -> ResponseCode {
+        let rcode = self.header[3] & 0x0F;
+        match rcode {
+            0 => ResponseCode::NoError,
+            1 => ResponseCode::FormatError,
+            2 => ResponseCode::ServerFailure,
+            3 => ResponseCode::NameError,
+            4 => ResponseCode::NotImplemented,
+            5 => ResponseCode::Refused,
+            _ => ResponseCode::NoError,
+        }
+    }
+
+    fn set_number_of_entries(&mut self, offset: usize, num: u16) {
+        self.header[offset] = ((num >> 8) & 0xFF) as u8;
+        self.header[offset + 1] = (num & 0xFF) as u8;
+    }
+
+    /// set_qd sets the specified number to the QD field.
+    pub fn set_qd(&mut self, num: u16) {
+        self.set_number_of_entries(4, num);
+    }
+
+    /// qd returns the number of entries in the question section.
+    pub fn qd(&self) -> u16 {
+        ((self.header[4] as u16) << 8) | (self.header[5] as u16)
+    }
+
+    /// set_an sets the specified number to the AN field.
+    pub fn set_an(&mut self, num: u16) {
+        self.set_number_of_entries(6, num);
+    }
+
+    /// an returns the number of entries in the answer section.
+    pub fn an(&self) -> u16 {
+        ((self.header[6] as u16) << 8) | (self.header[7] as u16)
+    }
+
+    /// set_ns sets the specified number to the NS field.
+    pub fn set_ns(&mut self, num: u16) {
+        self.set_number_of_entries(8, num);
+    }
+
+    /// ns returns the number of entries in the authority section.
+    pub fn ns(&self) -> u16 {
+        ((self.header[8] as u16) << 8) | (self.header[9] as u16)
+    }
+
+    /// set_ar sets the specified number to the AR field.
+    pub fn set_ar(&mut self, num: u16) {
+        self.set_number_of_entries(10, num);
+    }
+
+    /// ar returns the number of entries in the additional section.
+    pub fn ar(&self) -> u16 {
+        ((self.header[10] as u16) << 8) | (self.header[11] as u16)
+    }
+
+    /// set_id sets the specified number to the ID field.
     pub fn parse(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
         let ret = self.parse_header(msg_bytes);
         if ret.is_err() {
