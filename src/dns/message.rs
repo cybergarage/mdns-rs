@@ -31,9 +31,9 @@ impl Message {
 
     pub fn from_bytes(msg_bytes: &[u8]) -> Result<Message, MessageError> {
         let mut msg = Message::new();
-        let ret = match msg.parse(msg_bytes) {
-            Ok(()) => Ok(msg),
-            Err(e) => Err(e),
+        let ret = msg.parse(msg_bytes);
+        if ret.is_err() {
+            return Err(ret.err().unwrap());
         };
         Ok(msg)
     }
@@ -50,6 +50,7 @@ impl Message {
         if header_bytes.len() < HEADER_SIZE {
             return Err(MessageError::new(header_bytes, 0));
         }
+        self.header.copy_from_slice(header_bytes);
         Ok(())
     }
 
