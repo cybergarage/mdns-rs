@@ -12,30 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::message::*;
-use cybergarage::log::hexdump::*;
-
 #[cfg(test)]
 mod tests {
+
+    use crate::dns::message::Message;
+    // use cybergarage::log::hexdump::*;
 
     #[test]
     fn message_parse() {
         struct Test {
-            log: &'static str,
+            // log: &'static str,
+            log: Vec<u8>,
         }
 
         let tests = vec![Test {
-            log: include_str!("log/matter01.log"),
+            // log: include_str!("log/matter01.log"),
+            log: include_bytes!("log/matter01.bin").to_vec(),
         }];
 
         for test in tests {
-            let hexdump_bytes = Decoder::from_log(test.log);
-            assert!(hexdump_bytes.is_ok());
-            if hexdump_bytes.is_err() {
-                return;
-            }
             let mut msg = Message::new();
-            msg.parse(&hexdump_bytes.unwrap());
+            assert!(msg.parse(&test.log));
         }
     }
 }
