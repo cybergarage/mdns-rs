@@ -18,6 +18,7 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
 const HEADER_SIZE: usize = 12;
 
+#[derive(PartialEq)]
 pub enum QR {
     Query = 0,
     Response = 1,
@@ -74,6 +75,16 @@ impl Message {
             return QR::Query;
         }
         QR::Response
+    }
+
+    /// is_query returns true if the message is a query.
+    pub fn is_query(&self) -> bool {
+        self.qr() == QR::Query
+    }
+
+    /// is_response returns true if the message is a response.
+    pub fn is_response(&self) -> bool {
+        self.qr() == QR::Response
     }
 
     /// Opcode returns the kind of query.
@@ -201,7 +212,7 @@ impl Message {
         ((self.header[10] as u16) << 8) | (self.header[11] as u16)
     }
 
-    /// set_id sets the specified number to the ID field.
+    /// parse parses the specified message bytes.
     pub fn parse(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
         let ret = self.parse_header(msg_bytes);
         if ret.is_err() {
