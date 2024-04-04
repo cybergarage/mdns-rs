@@ -14,7 +14,10 @@
 
 pub use self::error::*;
 pub use self::message::*;
+pub use self::record::*;
 
 mod error;
 mod message;
+mod record;
+
 mod message_test;
