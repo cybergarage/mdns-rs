@@ -179,44 +179,48 @@ impl Message {
         self.header[offset + 1] = (num & 0xFF) as u8;
     }
 
+    fn number_of_entries(&self, offset: usize) -> u16 {
+        ((self.header[offset] as u16) << 8) | (self.header[offset + 1] as u16)
+    }
+
     /// set_qd sets the specified number to the QD field.
     pub fn set_qd(&mut self, num: u16) {
-        self.set_number_of_entries(4, num);
+        self.set_number_of_entries(4, num)
     }
 
     /// qd returns the number of entries in the question section.
     pub fn qd(&self) -> u16 {
-        ((self.header[4] as u16) << 8) | (self.header[5] as u16)
+        self.number_of_entries(4)
     }
 
     /// set_an sets the specified number to the AN field.
     pub fn set_an(&mut self, num: u16) {
-        self.set_number_of_entries(6, num);
+        self.set_number_of_entries(6, num)
     }
 
     /// an returns the number of entries in the answer section.
     pub fn an(&self) -> u16 {
-        ((self.header[6] as u16) << 8) | (self.header[7] as u16)
+        self.number_of_entries(6)
     }
 
     /// set_ns sets the specified number to the NS field.
     pub fn set_ns(&mut self, num: u16) {
-        self.set_number_of_entries(8, num);
+        self.set_number_of_entries(8, num)
     }
 
     /// ns returns the number of entries in the authority section.
     pub fn ns(&self) -> u16 {
-        ((self.header[8] as u16) << 8) | (self.header[9] as u16)
+        self.number_of_entries(8)
     }
 
     /// set_ar sets the specified number to the AR field.
     pub fn set_ar(&mut self, num: u16) {
-        self.set_number_of_entries(10, num);
+        self.set_number_of_entries(10, num)
     }
 
     /// ar returns the number of entries in the additional section.
     pub fn ar(&self) -> u16 {
-        ((self.header[10] as u16) << 8) | (self.header[11] as u16)
+        self.number_of_entries(10)
     }
 
     /// parse parses the specified message bytes.
