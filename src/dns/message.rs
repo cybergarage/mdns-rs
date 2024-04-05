@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::error::MessageError;
 use std::fmt;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+
+use crate::dns::error::MessageError;
+use crate::dns::record::Record;
 
 const HEADER_SIZE: usize = 12;
 
@@ -45,6 +47,10 @@ pub enum ResponseCode {
 /// Message represents a DNS message.
 pub struct Message {
     header: [u8; HEADER_SIZE],
+    questions: Vec<Record>,
+    answers: Vec<Record>,
+    authorities: Vec<Record>,
+    additionals: Vec<Record>,
 }
 
 /// Message represents a DNS message.
@@ -53,6 +59,10 @@ impl Message {
     pub fn new() -> Message {
         Message {
             header: [0; HEADER_SIZE],
+            questions: Vec::new(),
+            answers: Vec::new(),
+            authorities: Vec::new(),
+            additionals: Vec::new(),
         }
     }
 
@@ -230,6 +240,26 @@ impl Message {
             return Err(ret.err().unwrap());
         };
         Ok(())
+    }
+
+    /// questions returns the questions.
+    pub fn questions(&self) -> &Vec<Record> {
+        &self.questions
+    }
+
+    /// answers returns the answers.
+    pub fn answers(&self) -> &Vec<Record> {
+        &self.answers
+    }
+
+    /// authorities returns the authorities.
+    pub fn authorities(&self) -> &Vec<Record> {
+        &self.authorities
+    }
+
+    /// additionals returns the additionals.
+    pub fn additionals(&self) -> &Vec<Record> {
+        &self.additionals
     }
 
     fn parse_header(&mut self, header_bytes: &[u8]) -> Result<(), MessageError> {
