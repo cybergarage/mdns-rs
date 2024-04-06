@@ -13,11 +13,19 @@
 // limitations under the License.
 
 use std::fmt;
+use std::io::BufReader;
+use std::io::Read;
 
-pub struct Reader {}
+pub struct Reader<'a> {
+    reader: BufReader<&'a [u8]>,
+}
 
-impl Reader {
-    pub fn new() -> Reader {
-        Reader {}
+impl<'a> Reader<'a> {
+    pub fn new(reader: BufReader<&'a [u8]>) -> Reader<'a> {
+        Reader { reader: reader }
+    }
+
+    pub fn read_bytes(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
+        self.reader.read(buf)
     }
 }
