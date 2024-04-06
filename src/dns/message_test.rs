@@ -32,7 +32,7 @@ mod tests {
 
         for test in tests {
             let mut msg = Message::new();
-            assert!(msg.parse(&test.log).is_ok());
+            assert!(msg.parse_bytes(&test.log).is_ok());
         }
     }
 }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 use std::fmt;
+use std::io::BufReader;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
 use crate::dns::error::MessageError;
@@ -69,7 +70,7 @@ impl Message {
     /// from_bytes creates a new message from the specified bytes.
     pub fn from_bytes(msg_bytes: &[u8]) -> Result<Message, MessageError> {
         let mut msg = Message::new();
-        let ret = msg.parse(msg_bytes);
+        let ret = msg.parse_bytes(msg_bytes);
         if ret.is_err() {
             return Err(ret.err().unwrap());
         };
@@ -233,8 +234,9 @@ impl Message {
         self.number_of_entries(10)
     }
 
-    /// parse parses the specified message bytes.
-    pub fn parse(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
+    /// parse_bytes parses the specified message bytes.
+    pub fn parse_bytes(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
+        let buf = BufReader::new(msg_bytes);
         let ret = self.parse_header(msg_bytes);
         if ret.is_err() {
             return Err(ret.err().unwrap());
@@ -262,6 +264,14 @@ impl Message {
         &self.additionals
     }
 
+    fn parse_header_buf(&mut self, buf: &BufReader<&[u8]>) -> Result<(), MessageError> {
+        let ret = buf.read(&mut self.header_bytes);
+        if ret.is_err() {
+            return Err(MessageError::new(header_bytes, 0));
+        }
+        Ok(())
+    }
+
     fn parse_header(&mut self, header_bytes: &[u8]) -> Result<(), MessageError> {
         if header_bytes.len() < HEADER_SIZE {
             return Err(MessageError::new(header_bytes, 0));
@@ -283,7 +293,7 @@ impl Message {
 impl Clone for Message {
     fn clone(&self) -> Message {
         let mut msg = Message::new();
-        msg.parse(&self.bytes());
+        msg.parse_bytes(&self.bytes());
         msg
     }
 }
