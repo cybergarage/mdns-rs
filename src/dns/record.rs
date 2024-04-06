@@ -32,17 +32,11 @@ impl Record {
         record.bytes = msg_bytes.to_vec();
         record
     }
-
-    /// Create a new record from the specified bytes.
-    pub fn bytes(&self) -> Vec<u8> {
-        self.bytes
-    }
 }
 
 impl Clone for Record {
     fn clone(&self) -> Record {
-        let mut r = Record::new();
-        r
+        Record::from_bytes(&self.bytes)
     }
 }
 
