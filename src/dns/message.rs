@@ -18,6 +18,7 @@ use std::io::Read;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
 use crate::dns::error::MessageError;
+use crate::dns::reader::Reader;
 use crate::dns::record::Record;
 
 const HEADER_SIZE: usize = 12;
@@ -195,52 +196,52 @@ impl Message {
         ((self.header[offset] as u16) << 8) | (self.header[offset + 1] as u16)
     }
 
-    /// set_qd sets the specified number to the QD field.
-    pub fn set_qd(&mut self, num: u16) {
+    /// set_qd_count sets the specified number to the QD field.
+    pub fn set_qd_count(&mut self, num: u16) {
         self.set_number_of_entries(4, num)
     }
 
-    /// qd returns the number of entries in the question section.
-    pub fn qd(&self) -> u16 {
+    /// qd_count returns the number of entries in the question section.
+    pub fn qd_count(&self) -> u16 {
         self.number_of_entries(4)
     }
 
-    /// set_an sets the specified number to the AN field.
-    pub fn set_an(&mut self, num: u16) {
+    /// set_an_count sets the specified number to the AN field.
+    pub fn set_an_count(&mut self, num: u16) {
         self.set_number_of_entries(6, num)
     }
 
-    /// an returns the number of entries in the answer section.
-    pub fn an(&self) -> u16 {
+    /// an_count returns the number of entries in the answer section.
+    pub fn an_count(&self) -> u16 {
         self.number_of_entries(6)
     }
 
-    /// set_ns sets the specified number to the NS field.
-    pub fn set_ns(&mut self, num: u16) {
+    /// set_ns_count sets the specified number to the NS field.
+    pub fn set_ns_count(&mut self, num: u16) {
         self.set_number_of_entries(8, num)
     }
 
-    /// ns returns the number of entries in the authority section.
-    pub fn ns(&self) -> u16 {
+    /// ns_count returns the number of entries in the authority section.
+    pub fn ns_count(&self) -> u16 {
         self.number_of_entries(8)
     }
 
-    /// set_ar sets the specified number to the AR field.
-    pub fn set_ar(&mut self, num: u16) {
+    /// set_ar_count sets the specified number to the AR field.
+    pub fn set_ar_count(&mut self, num: u16) {
         self.set_number_of_entries(10, num)
     }
 
-    /// ar returns the number of entries in the additional section.
-    pub fn ar(&self) -> u16 {
+    /// ar_count returns the number of entries in the additional section.
+    pub fn ar_count(&self) -> u16 {
         self.number_of_entries(10)
     }
 
     /// parse_bytes parses the specified message bytes.
     pub fn parse_bytes(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
-        let mut reader = BufReader::new(msg_bytes);
+        let mut reader = Reader::new(BufReader::new(msg_bytes));
 
         // Header
-        if reader.read_exact(&mut self.header).is_err() {
+        if reader.read_bytes(&mut self.header).is_err() {
             return Err(MessageError::new(msg_bytes, 0));
         }
         Ok(())
