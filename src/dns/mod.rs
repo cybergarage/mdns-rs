@@ -18,6 +18,7 @@ pub use self::record::*;
 
 mod error;
 mod message;
+mod reader;
 mod record;
 
 mod message_test;
