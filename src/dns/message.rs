@@ -14,6 +14,7 @@
 
 use std::fmt;
 use std::io::BufReader;
+use std::io::Read;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
 use crate::dns::error::MessageError;
@@ -236,11 +237,12 @@ impl Message {
 
     /// parse_bytes parses the specified message bytes.
     pub fn parse_bytes(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
-        let buf = BufReader::new(msg_bytes);
-        let ret = self.parse_header(msg_bytes);
-        if ret.is_err() {
-            return Err(ret.err().unwrap());
-        };
+        let mut reader = BufReader::new(msg_bytes);
+
+        // Header
+        if reader.read_exact(&mut self.header).is_err() {
+            return Err(MessageError::new(msg_bytes, 0));
+        }
         Ok(())
     }
 
@@ -262,22 +264,6 @@ impl Message {
     /// additionals returns the additionals.
     pub fn additionals(&self) -> &Vec<Record> {
         &self.additionals
-    }
-
-    fn parse_header_buf(&mut self, buf: &BufReader<&[u8]>) -> Result<(), MessageError> {
-        let ret = buf.read(&mut self.header_bytes);
-        if ret.is_err() {
-            return Err(MessageError::new(header_bytes, 0));
-        }
-        Ok(())
-    }
-
-    fn parse_header(&mut self, header_bytes: &[u8]) -> Result<(), MessageError> {
-        if header_bytes.len() < HEADER_SIZE {
-            return Err(MessageError::new(header_bytes, 0));
-        }
-        self.header.copy_from_slice(header_bytes);
-        Ok(())
     }
 
     pub fn equals(&self, msg: &Message) -> bool {
