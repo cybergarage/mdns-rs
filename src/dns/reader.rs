@@ -21,8 +21,10 @@ pub struct Reader<'a> {
 }
 
 impl<'a> Reader<'a> {
-    pub fn new(reader: BufReader<&'a [u8]>) -> Reader<'a> {
-        Reader { reader: reader }
+    pub fn new(msg_bytes: &'a [u8]) -> Reader<'a> {
+        Reader {
+            reader: BufReader::new(msg_bytes),
+        }
     }
 
     pub fn read_bytes(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {

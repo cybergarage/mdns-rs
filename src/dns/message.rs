@@ -238,7 +238,7 @@ impl Message {
 
     /// parse_bytes parses the specified message bytes.
     pub fn parse_bytes(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
-        let mut reader = Reader::new(BufReader::new(msg_bytes));
+        let mut reader = Reader::new(msg_bytes);
 
         // Header
         if reader.read_bytes(&mut self.header).is_err() {
