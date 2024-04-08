@@ -16,18 +16,31 @@ use std::fmt;
 use std::io::BufReader;
 use std::io::Read;
 
+use crate::dns::error::MessageError;
+
 pub struct Reader<'a> {
-    reader: BufReader<&'a [u8]>,
+    buffer: &'a [u8],
+    cursor: usize,
 }
 
+/// A structure representing a DNS reader.
 impl<'a> Reader<'a> {
+
+    /// Create a new reader from the specified bytes.
     pub fn new(msg_bytes: &'a [u8]) -> Reader<'a> {
         Reader {
-            reader: BufReader::new(msg_bytes),
+            buffer: msg_bytes,
+            cursor: 0,
         }
     }
 
-    pub fn read_bytes(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
-        self.reader.read(buf)
+    /// read_bytes reads the specified bytes into the buffer.
+    pub fn read_bytes(&mut self, buf: &mut [u8]) -> Result<(), MessageError> {
+        if self.buffer.len() < self.cursor + buf.len() {
+            return Err(MessageError::new(self.buffer, self.cursor));
+        }
+        buf.copy_from_slice(&self.buffer[self.cursor..self.cursor + buf.len()]);
+        self.cursor += buf.len();
+        Ok(())
     }
 }
