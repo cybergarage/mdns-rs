@@ -17,7 +17,7 @@ use std::io::BufReader;
 use std::io::Read;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
-use crate::dns::error::MessageError;
+use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
 
@@ -70,7 +70,7 @@ impl Message {
     }
 
     /// from_bytes creates a new message from the specified bytes.
-    pub fn from_bytes(msg_bytes: &[u8]) -> Result<Message, MessageError> {
+    pub fn from_bytes(msg_bytes: &[u8]) -> Result<Message, Error> {
         let mut msg = Message::new();
         let ret = msg.parse_bytes(msg_bytes);
         if ret.is_err() {
@@ -237,12 +237,12 @@ impl Message {
     }
 
     /// parse_bytes parses the specified message bytes.
-    pub fn parse_bytes(&mut self, msg_bytes: &[u8]) -> Result<(), MessageError> {
+    pub fn parse_bytes(&mut self, msg_bytes: &[u8]) -> Result<(), Error> {
         let mut reader = Reader::new(msg_bytes);
 
         // Header
         if reader.read_bytes(&mut self.header).is_err() {
-            return Err(MessageError::new(msg_bytes, 0));
+            return Err(Error::new(msg_bytes, 0));
         }
         Ok(())
     }

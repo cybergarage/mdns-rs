@@ -16,24 +16,24 @@ use hex;
 use std::fmt;
 
 #[derive(Debug, Clone)]
-pub struct MessageError {
+pub struct Error {
     pub message: String,
     pub offset: usize,
 }
 
-impl MessageError {
-    pub fn new(msg_bytes: &[u8], offset: usize) -> MessageError {
-        MessageError {
+impl Error {
+    pub fn new(msg_bytes: &[u8], offset: usize) -> Error {
+        Error {
             message: hex::encode(msg_bytes),
             offset: offset,
         }
     }
 }
 
-impl fmt::Display for MessageError {
+impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{} (offset:{})", self.message, self.offset)
     }
 }
 
-impl std::error::Error for MessageError {}
+impl std::error::Error for Error {}
