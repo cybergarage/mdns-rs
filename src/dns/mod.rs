@@ -22,3 +22,4 @@ mod reader;
 mod record;
 
 mod message_test;
+mod reader_test;
