@@ -29,4 +29,10 @@ mod tests {
         assert_eq!(buf, [0x03]);
         assert!(reader.read_bytes(&mut buf).is_err());
     }
+
+    #[test]
+    fn reader_read_string() {
+        let mut reader = Reader::new(&[0x03, 'a' as u8, 'b' as u8, 'c' as u8]);
+        assert_eq!(reader.read_string().unwrap(), "abc");
+    }
 }
