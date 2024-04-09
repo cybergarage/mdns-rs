@@ -45,7 +45,7 @@ impl<'a> Reader<'a> {
         Ok(())
     }
 
-    /// read_string_size reads the next string size.
+    /// read_string_size reads the next string size from the buffer.
     pub fn read_string_size(&mut self) -> Result<usize, Error> {
         if self.buffer_len < self.cursor {
             return Err(Error::new(self.buffer, self.cursor));
@@ -55,7 +55,7 @@ impl<'a> Reader<'a> {
         Ok(str_len)
     }
 
-    /// read_string reads the next string.
+    /// read_string reads the next string from the buffer.
     pub fn read_string(&mut self) -> Result<String, Error> {
         let str_len = self.read_string_size()?;
         if self.buffer_len < self.cursor + str_len {
@@ -64,5 +64,38 @@ impl<'a> Reader<'a> {
         let str_bytes = &self.buffer[self.cursor..self.cursor + str_len];
         self.cursor += str_len;
         Ok(String::from_utf8(str_bytes.to_vec()).unwrap())
+    }
+
+    /// read_name reads the next name from the buffer.
+    pub fn read_name(&mut self) -> Result<String, Error> {
+        let mut name = String::new();
+        let mut is_compressed = false;
+        loop {
+            let label_len = self.buffer[self.cursor] as usize;
+            if label_len == 0 {
+                self.cursor += 1;
+                break;
+            }
+            if label_len & 0xc0 == 0xc0 {
+                if !is_compressed {
+                    is_compressed = true;
+                }
+                let offset =
+                    ((label_len as usize) & 0x3f) << 8 | self.buffer[self.cursor + 1] as usize;
+                self.cursor += 2;
+                let mut reader = Reader::new(&self.buffer[offset..]);
+                let mut compressed_name = reader.read_name()?;
+                name.push_str(&compressed_name);
+                break;
+            }
+            self.cursor += 1;
+            if 0 < name.len() {
+                name.push('.');
+            }
+            let label_bytes = &self.buffer[self.cursor..self.cursor + label_len];
+            name.push_str(&String::from_utf8(label_bytes.to_vec()).unwrap());
+            self.cursor += label_len;
+        }
+        Ok(name)
     }
 }
