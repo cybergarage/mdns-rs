@@ -38,7 +38,29 @@ mod tests {
 
     #[test]
     fn reader_read_name() {
-        let mut reader = Reader::new(&[0x03, 'a' as u8, 'b' as u8, 'c' as u8, 0x00]);
-        assert_eq!(reader.read_name().unwrap(), "abc");
+
+        struct Test {
+            data: Vec<u8>,
+            name: String,
+        }
+
+        let tests = vec![
+            Test {
+                data: vec![0x03, 'a' as u8, 'b' as u8, 'c' as u8, 0x00],
+                name: "abc".to_string(),
+            },
+            Test {
+                data: vec![
+                    0x03, 'a' as u8, 'b' as u8, 'c' as u8, 0x03, 'd' as u8, 'e' as u8, 'f' as u8,
+                    0x00,
+                ],
+                name: "abc.def".to_string(),
+            },
+        ];
+
+        for test in tests {
+            let mut reader = Reader::new(&test.data);
+            assert_eq!(reader.read_name().unwrap(), test.name);
+        }
     }
 }
