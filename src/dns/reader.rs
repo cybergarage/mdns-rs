@@ -85,6 +85,9 @@ impl<'a> Reader<'a> {
                 self.cursor += 2;
                 let mut reader = Reader::new(&self.buffer[offset..]);
                 let mut compressed_name = reader.read_name()?;
+                if 0 < name.len() {
+                    name.push('.');
+                }
                 name.push_str(&compressed_name);
                 break;
             }
