@@ -35,4 +35,10 @@ mod tests {
         let mut reader = Reader::new(&[0x03, 'a' as u8, 'b' as u8, 'c' as u8]);
         assert_eq!(reader.read_string().unwrap(), "abc");
     }
+
+    #[test]
+    fn reader_read_name() {
+        let mut reader = Reader::new(&[0x03, 'a' as u8, 'b' as u8, 'c' as u8, 0x00]);
+        assert_eq!(reader.read_name().unwrap(), "abc");
+    }
 }
