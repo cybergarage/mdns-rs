@@ -12,15 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::any::Any;
 use std::fmt;
 
+use crate::dns::class::*;
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;
+use crate::dns::typ::*;
 
 /// A structure representing a DNS record.
 pub struct Record {
     name: String,
     data: Vec<u8>,
+    typ: Type,
+    class: Class,
+    unicastResponse: bool,
 }
 
 /// A structure representing a DNS record.
@@ -30,6 +36,9 @@ impl Record {
         Record {
             name: String::new(),
             data: Vec::new(),
+            typ: Type::NONE,
+            class: Class::NONE,
+            unicastResponse: false,
         }
     }
     /// Create a new record from the specified bytes.
@@ -54,7 +63,17 @@ impl Record {
     }
 
     fn parse_resouce(&mut self, reader: &mut Reader) -> Result<(), Error> {
+        // Parse domain name.
         self.name = reader.read_name()?;
+
+        // Parse type.
+        self.typ = Type::from_value(reader.read_u16()?);
+
+        // Parse class.
+        let cls = reader.read_u16()?;
+        self.class = Class::from_value(cls & CLASS_MASK);
+        self.unicastResponse = (cls & UNICAST_RESPONSE_MASK) != 0;
+
         Ok(())
     }
 }
