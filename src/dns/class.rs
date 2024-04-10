@@ -14,5 +14,6 @@
 
 #[derive(PartialEq)]
 pub enum Class {
+    NONE = 0x0000,
     IN = 0x0001,
 }
