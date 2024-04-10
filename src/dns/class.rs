@@ -17,3 +17,19 @@ pub enum Class {
     NONE = 0x0000,
     IN = 0x0001,
 }
+
+impl Class {
+    pub fn from_value(value: u16) -> Class {
+        match value {
+            0x0001 => Class::IN,
+            _ => Class::NONE,
+        }
+    }
+
+    pub fn to_value(&self) -> u16 {
+        match self {
+            Class::IN => 0x0001,
+            _ => 0x0000,
+        }
+    }
+}
