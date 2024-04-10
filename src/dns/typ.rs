@@ -14,6 +14,7 @@
 
 #[derive(PartialEq)]
 pub enum Type {
+    NONE = 0x0000,
     A = 0x0001,
     NS = 0x0002,
     CNAME = 0x0005,
