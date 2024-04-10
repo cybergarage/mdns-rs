@@ -28,3 +28,41 @@ pub enum Type {
     OPT = 0x0029,
     ANY = 0x00ff,
 }
+
+impl Type {
+    pub fn from_value(value: u16) -> Type {
+        match value {
+            0x0001 => Type::A,
+            0x0002 => Type::NS,
+            0x0005 => Type::CNAME,
+            0x0006 => Type::SOA,
+            0x000c => Type::PTR,
+            0x000f => Type::MX,
+            0x0010 => Type::TXT,
+            0x001c => Type::AAAA,
+            0x0021 => Type::SRV,
+            0x0023 => Type::NAPTR,
+            0x0029 => Type::OPT,
+            0x00ff => Type::ANY,
+            _ => Type::NONE,
+        }
+    }
+
+    pub fn to_value(&self) -> u16 {
+        match self {
+            Type::A => 0x0001,
+            Type::NS => 0x0002,
+            Type::CNAME => 0x0005,
+            Type::SOA => 0x0006,
+            Type::PTR => 0x000c,
+            Type::MX => 0x000f,
+            Type::TXT => 0x0010,
+            Type::AAAA => 0x001c,
+            Type::SRV => 0x0021,
+            Type::NAPTR => 0x0023,
+            Type::OPT => 0x0029,
+            Type::ANY => 0x00ff,
+            Type::NONE => 0x0000,
+        }
+    }
+}
