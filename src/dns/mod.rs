@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+pub use self::class::*;
 pub use self::error::*;
 pub use self::message::*;
 pub use self::record::*;
+pub use self::typ::*;
 
+mod class;
 mod error;
 mod message;
 mod reader;
 mod record;
+mod typ;
 
 mod message_test;
 mod reader_test;
