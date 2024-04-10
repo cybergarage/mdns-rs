@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+pub const TYPE_MASK: u16 = 0x7fff;
+
 #[derive(PartialEq)]
 pub enum Type {
     NONE = 0x0000,
