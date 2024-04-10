@@ -14,29 +14,54 @@
 
 use std::fmt;
 
+use crate::dns::error::Error;
+use crate::dns::reader::Reader;
+
 /// A structure representing a DNS record.
 pub struct Record {
-    bytes: Vec<u8>,
+    name: String,
+    data: Vec<u8>,
 }
 
 /// A structure representing a DNS record.
 impl Record {
     /// Create a new record.
     pub fn new() -> Record {
-        Record { bytes: Vec::new() }
+        Record {
+            name: String::new(),
+            data: Vec::new(),
+        }
     }
-
     /// Create a new record from the specified bytes.
     pub fn from_bytes(msg_bytes: &[u8]) -> Record {
         let mut record = Record::new();
-        record.bytes = msg_bytes.to_vec();
+        record.data = msg_bytes.to_vec();
         record
+    }
+
+    pub fn from_reader(reader: &mut Reader) -> Result<Record, Error> {
+        let mut record = Record::new();
+        let res = record.parse_reader(reader);
+        if res.is_err() {
+            return Err(res.unwrap_err());
+        }
+        Ok(record)
+    }
+
+    fn parse_reader(&mut self, reader: &mut Reader) -> Result<(), Error> {
+        self.parse_resouce(reader)?;
+        Ok(())
+    }
+
+    fn parse_resouce(&mut self, reader: &mut Reader) -> Result<(), Error> {
+        self.name = reader.read_name()?;
+        Ok(())
     }
 }
 
 impl Clone for Record {
     fn clone(&self) -> Record {
-        Record::from_bytes(&self.bytes)
+        Record::from_bytes(&self.data)
     }
 }
 
