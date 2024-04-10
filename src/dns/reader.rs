@@ -45,6 +45,23 @@ impl<'a> Reader<'a> {
         self.cursor
     }
 
+    // read_u8 reads the next byte from the buffer.
+    pub fn read_u8(&mut self) -> Result<u8, Error> {
+        if self.buffer_len < self.cursor {
+            return Err(Error::new(self.buffer, self.cursor));
+        }
+        let v = self.buffer[self.cursor];
+        self.cursor += 1;
+        Ok(v)
+    }
+
+    /// read_u16 reads the next 16-bit integer from the buffer.
+    pub fn read_u16(&mut self) -> Result<u16, Error> {
+        let mut buf = [0; 2];
+        self.read_bytes(&mut buf)?;
+        Ok(u16::from_be_bytes(buf))
+    }
+
     /// read_bytes reads the next bytes into the buffer.
     pub fn read_bytes(&mut self, buf: &mut [u8]) -> Result<(), Error> {
         if self.buffer_len < self.cursor + buf.len() {
