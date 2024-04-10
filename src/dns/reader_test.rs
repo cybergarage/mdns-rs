@@ -38,7 +38,6 @@ mod tests {
 
     #[test]
     fn reader_read_name() {
-
         struct Test {
             data: Vec<u8>,
             name: String,

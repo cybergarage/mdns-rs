@@ -35,6 +35,16 @@ impl<'a> Reader<'a> {
         }
     }
 
+    /// set_offset sets the offset of the buffer.
+    pub fn set_offset(&mut self, offset: usize) {
+        self.cursor = offset;
+    }
+
+    /// offset returns the offset of the buffer.
+    pub fn offset(&self) -> usize {
+        self.cursor
+    }
+
     /// read_bytes reads the next bytes into the buffer.
     pub fn read_bytes(&mut self, buf: &mut [u8]) -> Result<(), Error> {
         if self.buffer_len < self.cursor + buf.len() {
