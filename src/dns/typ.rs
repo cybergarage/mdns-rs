@@ -14,7 +14,7 @@
 
 pub const TYPE_MASK: u16 = 0x7fff;
 
-#[derive(PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum Type {
     NONE = 0x0000,
     A = 0x0001,
