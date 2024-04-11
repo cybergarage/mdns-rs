@@ -27,6 +27,7 @@ pub struct Record {
     typ: Type,
     class: Class,
     unicastResponse: bool,
+    ttl: u32,
 }
 
 /// A structure representing a DNS record.
@@ -39,7 +40,28 @@ impl Record {
             typ: Type::NONE,
             class: Class::NONE,
             unicastResponse: false,
+            ttl: 0,
         }
+    }
+
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn typ(&self) -> Type {
+        self.typ
+    }
+
+    pub fn class(&self) -> Class {
+        self.class
+    }
+
+    pub fn unicast_response(&self) -> bool {
+        self.unicastResponse
+    }
+
+    pub fn ttl(&self) -> u32 {
+        self.ttl
     }
 
     pub fn parse_request_record(&mut self, reader: &mut Reader) -> Result<(), Error> {
@@ -49,6 +71,18 @@ impl Record {
 
     pub fn parse_resource_record(&mut self, reader: &mut Reader) -> Result<(), Error> {
         self.parse_section(reader)?;
+
+        // Parse TTL.
+        self.ttl = reader.read_u32()?;
+
+        // Parse data length.
+        let data_len = reader.read_u16()?;
+        if 0 < data_len {
+            let mut data = vec![0; data_len as usize];
+            reader.read_bytes(&mut data)?;
+            self.data = data;
+        }
+
         Ok(())
     }
 
