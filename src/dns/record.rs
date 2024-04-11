@@ -41,28 +41,13 @@ impl Record {
             unicastResponse: false,
         }
     }
-    /// Create a new record from the specified bytes.
-    pub fn from_bytes(msg_bytes: &[u8]) -> Record {
-        let mut record = Record::new();
-        record.data = msg_bytes.to_vec();
-        record
-    }
 
-    pub fn from_reader(reader: &mut Reader) -> Result<Record, Error> {
-        let mut record = Record::new();
-        let res = record.parse_reader(reader);
-        if res.is_err() {
-            return Err(res.unwrap_err());
-        }
-        Ok(record)
-    }
-
-    fn parse_reader(&mut self, reader: &mut Reader) -> Result<(), Error> {
+    pub fn parse_request_record(&mut self, reader: &mut Reader) -> Result<(), Error> {
         self.parse_section(reader)?;
         Ok(())
     }
 
-    fn parse_section(&mut self, reader: &mut Reader) -> Result<(), Error> {
+    pub fn parse_section(&mut self, reader: &mut Reader) -> Result<(), Error> {
         // Parse domain name.
         self.name = reader.read_name()?;
 
@@ -75,12 +60,6 @@ impl Record {
         self.unicastResponse = (cls & UNICAST_RESPONSE_MASK) != 0;
 
         Ok(())
-    }
-}
-
-impl Clone for Record {
-    fn clone(&self) -> Record {
-        Record::from_bytes(&self.data)
     }
 }
 
