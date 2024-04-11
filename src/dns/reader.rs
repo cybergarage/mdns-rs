@@ -62,6 +62,13 @@ impl<'a> Reader<'a> {
         Ok(u16::from_be_bytes(buf))
     }
 
+    /// read_u32 reads the next 32-bit integer from the buffer.
+    pub fn read_u32(&mut self) -> Result<u32, Error> {
+        let mut buf = [0; 4];
+        self.read_bytes(&mut buf)?;
+        Ok(u32::from_be_bytes(buf))
+    }
+
     /// read_bytes reads the next bytes into the buffer.
     pub fn read_bytes(&mut self, buf: &mut [u8]) -> Result<(), Error> {
         if self.buffer_len < self.cursor + buf.len() {
