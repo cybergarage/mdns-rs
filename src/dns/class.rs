@@ -16,7 +16,7 @@ pub const UNICAST_RESPONSE_MASK: u16 = 0x8000;
 pub const CACHE_FLUSH_MASK: u16 = 0x8000;
 pub const CLASS_MASK: u16 = 0x7fff;
 
-#[derive(PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum Class {
     NONE = 0x0000,
     IN = 0x0001,
