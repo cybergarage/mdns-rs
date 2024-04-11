@@ -58,11 +58,11 @@ impl Record {
     }
 
     fn parse_reader(&mut self, reader: &mut Reader) -> Result<(), Error> {
-        self.parse_resouce(reader)?;
+        self.parse_section(reader)?;
         Ok(())
     }
 
-    fn parse_resouce(&mut self, reader: &mut Reader) -> Result<(), Error> {
+    fn parse_section(&mut self, reader: &mut Reader) -> Result<(), Error> {
         // Parse domain name.
         self.name = reader.read_name()?;
 
