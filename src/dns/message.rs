@@ -244,6 +244,39 @@ impl Message {
         if reader.read_bytes(&mut self.header).is_err() {
             return Err(Error::new(msg_bytes, 0));
         }
+
+        // Questions
+        let qd_count = self.qd_count();
+        for _ in 0..qd_count {
+            let mut question = Record::new();
+            question.parse_request_record(&mut reader)?;
+            self.questions.push(question);
+        }
+
+        // Answers
+        let an_count = self.an_count();
+        for _ in 0..an_count {
+            let mut answer = Record::new();
+            answer.parse_resource_record(&mut reader)?;
+            self.answers.push(answer);
+        }
+
+        // Authorities
+        let ns_count = self.ns_count();
+        for _ in 0..ns_count {
+            let mut authority = Record::new();
+            authority.parse_resource_record(&mut reader)?;
+            self.authorities.push(authority);
+        }
+
+        // Additionals
+        let ar_count = self.ar_count();
+        for _ in 0..ar_count {
+            let mut additional = Record::new();
+            additional.parse_resource_record(&mut reader)?;
+            self.additionals.push(additional);
+        }
+
         Ok(())
     }
 
