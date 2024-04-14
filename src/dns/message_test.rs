@@ -20,19 +20,36 @@ mod tests {
 
     #[test]
     fn message_parse() {
+        struct Expected {
+            qd_count: u16,
+            an_count: u16,
+            ns_count: u16,
+            ar_count: u16,
+        }
         struct Test {
             // log: &'static str,
             log: Vec<u8>,
+            expected: Expected,
         }
 
         let tests = vec![Test {
             // log: include_str!("log/matter01.log"),
             log: include_bytes!("log/matter01.bin").to_vec(),
+            expected: Expected {
+                qd_count: 0,
+                an_count: 5,
+                ns_count: 0,
+                ar_count: 0,
+            },
         }];
 
         for test in tests {
             let mut msg = Message::new();
             assert!(msg.parse_bytes(&test.log).is_ok());
+            assert_eq!(msg.qd_count(), test.expected.qd_count);
+            assert_eq!(msg.an_count(), test.expected.an_count);
+            assert_eq!(msg.ns_count(), test.expected.ns_count);
+            assert_eq!(msg.ar_count(), test.expected.ar_count);
         }
     }
 }
