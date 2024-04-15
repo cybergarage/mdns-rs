@@ -13,10 +13,12 @@
 // limitations under the License.
 
 pub use self::client::Client;
+pub use self::service::Service;
 
 mod dns;
 
 mod client;
 mod default;
+mod service;
 
 mod client_test;
