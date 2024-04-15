@@ -56,6 +56,10 @@ impl Record {
         self.class
     }
 
+    pub fn data(&self) -> &[u8] {
+        &self.data
+    }
+
     pub fn unicast_response(&self) -> bool {
         self.unicastResponse
     }
