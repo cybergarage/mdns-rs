@@ -16,7 +16,6 @@
 mod tests {
 
     use crate::dns::message::Message;
-    // use cybergarage::log::hexdump::*;
 
     #[test]
     fn message_parse() {
@@ -27,19 +26,17 @@ mod tests {
             ar_count: u16,
         }
         struct Test {
-            // log: &'static str,
             msg_bytes: Vec<u8>,
             expected: Expected,
         }
 
         let tests = vec![Test {
-            // log: include_str!("log/matter01.log"),
-            msg_bytes: include_bytes!("log/matter01.bin").to_vec(),
+            msg_bytes: include_bytes!("log/matter-spec-120-4.3.1.13-dns-sd.bin").to_vec(),
             expected: Expected {
                 qd_count: 0,
-                an_count: 5,
+                an_count: 7,
                 ns_count: 0,
-                ar_count: 0,
+                ar_count: 5,
             },
         }];
 
