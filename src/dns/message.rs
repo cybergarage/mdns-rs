@@ -300,6 +300,31 @@ impl Message {
         &self.additionals
     }
 
+    /// find_record returns the record of the specified name.
+    pub fn find_record(&self, name: &str) -> Option<&Record> {
+        for question in self.questions() {
+            if question.name() == name {
+                return Some(question);
+            }
+        }
+        for answer in self.answers() {
+            if answer.name() == name {
+                return Some(answer);
+            }
+        }
+        for authority in self.authorities() {
+            if authority.name() == name {
+                return Some(authority);
+            }
+        }
+        for additional in self.additionals() {
+            if additional.name() == name {
+                return Some(additional);
+            }
+        }
+        None
+    }
+
     pub fn equals(&self, msg: &Message) -> bool {
         true
     }
