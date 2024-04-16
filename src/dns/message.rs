@@ -13,9 +13,6 @@
 // limitations under the License.
 
 use std::fmt;
-use std::io::BufReader;
-use std::io::Read;
-use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;

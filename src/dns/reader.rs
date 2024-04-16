@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::fmt;
-use std::io::BufReader;
-use std::io::Read;
-
 use crate::dns::error::Error;
 
 pub struct Reader<'a> {
