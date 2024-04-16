@@ -15,7 +15,7 @@
 use crate::dns::error::Error;
 use crate::dns::record::Record;
 use std::fmt;
-use std::net::{IpAddr, IpV6Addr};
+use std::net::{IpAddr, Ipv6Addr};
 
 pub struct AAAARecord {
     ipaddr: IpAddr,
@@ -24,8 +24,8 @@ pub struct AAAARecord {
 impl AAAARecord {
     pub fn from(record: &Record) -> Result<AAAARecord, Error> {
         let data = record.data();
-        let addr = if let Ok(arr) = data[0..16].try_into() {
-            IpAddr::V6(IpV6Addr::from(arr))
+        let addr = if let Ok(arr) = <&[u8] as TryInto<T>>::try_into(&data[0..16]) {
+            IpAddr::V6(Ipv6Addr::from(arr))
         } else {
             return Err(Error::new(data, 0));
         };
