@@ -23,7 +23,7 @@ pub struct ARecord {
 impl ARecord {
     pub fn from(record: &Record) -> Result<ARecord, Error> {
         let data = record.data();
-        let addr = if let Ok(arr) = <&[u8] as TryInto<T>>::try_into(&data[0..4]) {
+        let addr = if let Ok(arr) = TryInto::<[u8; 4]>::try_into(data[0..4]) {
             IpAddr::V4(Ipv4Addr::from(arr))
         } else {
             return Err(Error::new(data, 0));
