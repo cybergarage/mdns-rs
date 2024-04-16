@@ -22,7 +22,7 @@ pub struct AAAARecord {
 }
 
 impl AAAARecord {
-    pub fn from(record: &Record) -> Result<AAARecord, Error> {
+    pub fn from(record: &Record) -> Result<AAAARecord, Error> {
         let data = record.data();
         let addr = if let Ok(arr) = data[0..16].try_into() {
             IpAddr::from(arr)
