@@ -12,13 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::dns::error::Error;
 use std::fmt;
+use std::net::IpAddr;
 
-pub struct ARecord {}
+pub struct ARecord {
+    ipaddr: IpAddr,
+}
 
 impl ARecord {
-    pub fn new() -> ARecord {
-        ARecord {}
+    pub fn from(record: &Record) -> Result<ARecord, Error> {
+        let data = record.data();
+        let addr = if let Ok(arr) = data[0..16].try_into() {
+            IpAddr::from(arr)
+        } else {
+            return Err(Error::new(data, 0));
+        };
+
+        if data.len() != 8 {
+            let err = Error::new(data, 0);
+            return Err(err);
+        }
+        let addr = IpAddr::from(&data[0..8]);
+        let a = ARecord { ipaddr: addr };
+        Ok(a)
     }
 }
 
