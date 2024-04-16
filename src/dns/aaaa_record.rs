@@ -24,7 +24,7 @@ pub struct AAAARecord {
 impl AAAARecord {
     pub fn from(record: &Record) -> Result<AAAARecord, Error> {
         let data = record.data();
-        let addr = if let Ok(arr) = <&[u8] as TryInto<T>>::try_into(&data[0..16]) {
+        let addr = if let Ok(arr) = TryInto::<[u8; 16]>::try_into(data[0..16]) {
             IpAddr::V6(Ipv6Addr::from(arr))
         } else {
             return Err(Error::new(data, 0));
