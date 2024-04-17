@@ -16,11 +16,14 @@ use crate::dns::error::Error;
 use crate::dns::record::Record;
 use std::fmt;
 use std::net::{IpAddr, Ipv4Addr};
+
+/// ARecord represents an A record.
 pub struct ARecord {
     ipaddr: IpAddr,
 }
 
 impl ARecord {
+    // from_record creates a new A record from the specified record.
     pub fn from_record(record: &Record) -> Result<ARecord, Error> {
         let data = record.data();
         let addr = if data.len() >= 4 {
@@ -31,6 +34,11 @@ impl ARecord {
         };
         let a = ARecord { ipaddr: addr };
         Ok(a)
+    }
+
+    /// ipaddr returns the IP address of the A record.
+    pub fn ipaddr(&self) -> &IpAddr {
+        &self.ipaddr
     }
 }
 

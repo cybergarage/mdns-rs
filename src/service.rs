@@ -13,12 +13,14 @@
 // limitations under the License.
 
 use crate::dns::{Message, Record};
+use std::net::IpAddr;
 
 pub struct Service<'a> {
     message: &'a Message,
     name: String,
     domain: String,
     host: String,
+    address: Vec<IpAddr>,
     port: u16,
 }
 
@@ -30,6 +32,7 @@ impl Service<'_> {
             domain: String::new(),
             host: String::new(),
             port: 0,
+            address: Vec::new(),
         };
         srv.parse_message(msg);
         srv
