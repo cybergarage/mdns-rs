@@ -15,27 +15,34 @@
 use std::sync::Arc;
 use std::sync::Mutex;
 
-use cybergarage::net::MulticastManager;
+use cybergarage::net::{MulticastManager, Observer, Packet};
 
 use crate::default::{MULTICAST_V4_ADDR, MULTICAST_V6_ADDR, PORT};
 
+/// Client represents a client.
 pub struct Client {
     transport_mgr: MulticastManager,
 }
 
 impl Client {
+    /// new creates a new client.
     pub fn new() -> Arc<Mutex<Client>> {
-        // let (tx, _): (Sender<Packet>, Receiver<Packet>) = mpsc::channel();
         let client = Arc::new(Mutex::new(Client {
             transport_mgr: MulticastManager::new(),
         }));
+        {
+            let mut client_lock = client.lock().unwrap();
+            client_lock.transport_mgr.add_observer(client.clone());
+        } // client_lock is dropped here
         client
     }
 
+    /// is_running returns true if the client is running.
     pub fn is_running(&self) -> bool {
         self.transport_mgr.is_running()
     }
 
+    /// start starts the client.
     pub fn start(&mut self) -> bool {
         if self.transport_mgr.is_running() {
             return true;
@@ -47,12 +54,17 @@ impl Client {
         true
     }
 
+    /// stop stops the client.
     pub fn stop(&mut self) -> bool {
         if !self.transport_mgr.stop() {
             return false;
         }
         true
     }
+}
+
+impl Observer for Client {
+    fn packet_received(&mut self, msg: &Packet) {}
 }
 
 impl Drop for Client {
