@@ -341,7 +341,7 @@ impl Clone for Message {
 }
 
 impl fmt::Display for Message {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, _f: &mut fmt::Formatter) -> fmt::Result {
         Ok(())
     }
 }

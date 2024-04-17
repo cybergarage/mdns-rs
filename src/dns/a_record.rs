@@ -43,7 +43,7 @@ impl ARecord {
 }
 
 impl fmt::Display for ARecord {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, _f: &mut fmt::Formatter) -> fmt::Result {
         Ok(())
     }
 }

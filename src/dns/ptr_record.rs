@@ -23,7 +23,7 @@ impl PTRRecord {
 }
 
 impl fmt::Display for PTRRecord {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, _f: &mut fmt::Formatter) -> fmt::Result {
         Ok(())
     }
 }

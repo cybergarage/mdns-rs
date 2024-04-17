@@ -23,7 +23,7 @@ impl NSECRecord {
 }
 
 impl fmt::Display for NSECRecord {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, _f: &mut fmt::Formatter) -> fmt::Result {
         Ok(())
     }
 }
