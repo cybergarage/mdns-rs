@@ -15,7 +15,9 @@
 use crate::dns::{AAAARecord, ARecord, Message, Record, Type};
 use std::net::IpAddr;
 
+/// Service represents a DNS-SD service.
 pub struct Service {
+    msg: Message,
     name: String,
     domain: String,
     host: String,
@@ -24,8 +26,10 @@ pub struct Service {
 }
 
 impl Service {
+    /// from_message creates a new Service from the specified message.
     pub fn from_message(msg: &Message) -> Service {
         let mut srv = Service {
+            msg: msg.clone(),
             name: String::new(),
             domain: String::new(),
             host: String::new(),
@@ -36,22 +40,32 @@ impl Service {
         srv
     }
 
+    /// message returns the message of the service.
+    pub fn message(&self) -> &Message {
+        &self.msg
+    }
+
+    /// name returns the name of the service.
     pub fn name(&self) -> &str {
         &self.name
     }
 
+    /// domain returns the domain of the service.
     pub fn domain(&self) -> &str {
         &self.domain
     }
 
+    /// host returns the host of the service.
     pub fn host(&self) -> &str {
         &self.host
     }
 
+    /// ipaddrs returns the IP addresses of the service.
     pub fn ipaddrs(&self) -> &Vec<IpAddr> {
         &self.ipaddrs
     }
 
+    /// port returns the port of the service.
     pub fn port(&self) -> u16 {
         self.port
     }
