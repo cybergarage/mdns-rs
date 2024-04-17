@@ -17,12 +17,14 @@ use crate::dns::record::Record;
 use std::fmt;
 use std::net::{IpAddr, Ipv6Addr};
 
+/// AAAARecord represents an AAAA record.
 pub struct AAAARecord {
     ipaddr: IpAddr,
 }
 
 impl AAAARecord {
-    pub fn from(record: &Record) -> Result<AAAARecord, Error> {
+    /// from_record creates a new AAAA record from the specified record.
+    pub fn from_record(record: &Record) -> Result<AAAARecord, Error> {
         let data = record.data();
         let addr = if data.len() >= 16 {
             let arr: [u8; 16] = data[0..16].try_into().unwrap();
@@ -32,6 +34,11 @@ impl AAAARecord {
         };
         let a = AAAARecord { ipaddr: addr };
         Ok(a)
+    }
+
+    /// ipaddr returns the IP address of the AAAA record.
+    pub fn ipaddr(&self) -> &IpAddr {
+        &self.ipaddr
     }
 }
 
