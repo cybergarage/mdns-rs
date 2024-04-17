@@ -13,6 +13,7 @@
 // limitations under the License.
 
 use crate::dns::{AAAARecord, ARecord, Message, Record, Type};
+use std::collections::HashMap;
 use std::net::IpAddr;
 
 /// Service represents a DNS-SD service.
@@ -23,6 +24,7 @@ pub struct Service {
     host: String,
     ipaddrs: Vec<IpAddr>,
     port: u16,
+    attrs: HashMap<String, String>,
 }
 
 impl Service {
@@ -35,6 +37,7 @@ impl Service {
             host: String::new(),
             port: 0,
             ipaddrs: Vec::new(),
+            attrs: HashMap::new(),
         };
         srv.parse_message(msg);
         srv
@@ -70,6 +73,16 @@ impl Service {
         self.port
     }
 
+    /// attributes returns the attributes of the service.
+    pub fn attributes(&self) -> &HashMap<String, String> {
+        &self.attrs
+    }
+
+    /// attribute returns the attribute of the service.
+    pub fn attribute(&self, key: &str) -> Option<&String> {
+        self.attrs.get(key)
+    }
+
     fn parse_message(&mut self, msg: &Message) {
         for record in msg.questions() {
             self.parse_record(record);
@@ -100,6 +113,10 @@ impl Service {
                 }
                 _ => {}
             },
+            Type::TXT => {
+                let txt = crate::dns::TXTRecord::from_record(record).unwrap();
+                self.attrs = txt.attributes().clone();
+            }
             _ => {}
         }
     }
