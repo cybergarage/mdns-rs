@@ -15,23 +15,42 @@
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
+use std::collections::HashMap;
 use std::fmt;
 
 pub struct TXTRecord {
     strs: Vec<String>,
+    attrs: HashMap<String, String>,
 }
 
 impl TXTRecord {
+    /// from_record creates a new TXT record from the specified record.
     pub fn from_record(record: &Record) -> Result<TXTRecord, Error> {
         let data = record.data();
         let mut reader = Reader::from_bytes(data);
         let strs = reader.read_strings()?;
-        let txt = TXTRecord { strs: strs };
+        let mut attrs = HashMap::new();
+        for s in &strs {
+            let mut kv = s.splitn(2, '=');
+            let key = kv.next().unwrap().to_string();
+            let value = kv.next().unwrap_or("").to_string();
+            attrs.insert(key, value);
+        }
+        let txt = TXTRecord {
+            strs: strs,
+            attrs: attrs,
+        };
         Ok(txt)
     }
 
+    /// strings returns the strings of the TXT record.
     pub fn strings(&self) -> &Vec<String> {
         &self.strs
+    }
+
+    /// attributes returns the attributes of the TXT record.
+    pub fn attributes(&self) -> &HashMap<String, String> {
+        &self.attrs
     }
 }
 
