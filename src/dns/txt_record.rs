@@ -12,13 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::dns::error::Error;
+use crate::dns::reader::Reader;
+use crate::dns::record::Record;
 use std::fmt;
 
-pub struct TXTRecord {}
+pub struct TXTRecord {
+    strs: Vec<String>,
+}
 
 impl TXTRecord {
-    pub fn new() -> TXTRecord {
-        TXTRecord {}
+    pub fn from_record(record: &Record) -> Result<TXTRecord, Error> {
+        let data = record.data();
+        let mut reader = Reader::new(data);
+        let strs = reader.read_strings()?;
+        let txt = TXTRecord { strs: strs };
+        Ok(txt)
+    }
+
+    pub fn strings(&self) -> &Vec<String> {
+        &self.strs
     }
 }
 
