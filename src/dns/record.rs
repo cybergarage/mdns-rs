@@ -25,7 +25,7 @@ pub struct Record {
     data: Vec<u8>,
     typ: Type,
     class: Class,
-    unicastResponse: bool,
+    unicast_response: bool,
     ttl: u32,
 }
 
@@ -38,7 +38,7 @@ impl Record {
             data: Vec::new(),
             typ: Type::NONE,
             class: Class::NONE,
-            unicastResponse: false,
+            unicast_response: false,
             ttl: 0,
         }
     }
@@ -60,7 +60,7 @@ impl Record {
     }
 
     pub fn unicast_response(&self) -> bool {
-        self.unicastResponse
+        self.unicast_response
     }
 
     pub fn ttl(&self) -> u32 {
@@ -99,7 +99,7 @@ impl Record {
         // Parse class.
         let cls = reader.read_u16()?;
         self.class = Class::from_value(cls & CLASS_MASK);
-        self.unicastResponse = (cls & UNICAST_RESPONSE_MASK) != 0;
+        self.unicast_response = (cls & UNICAST_RESPONSE_MASK) != 0;
 
         Ok(())
     }
