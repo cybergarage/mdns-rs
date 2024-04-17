@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::Message;
+use crate::dns::{Message, Record};
 
 pub struct Service<'a> {
     message: &'a Message,
@@ -35,5 +35,20 @@ impl Service<'_> {
         srv
     }
 
-    fn parse_message(&mut self, msg: &Message) {}
+    fn parse_message(&mut self, msg: &Message) {
+        for record in msg.questions() {
+            self.parse_record(record);
+        }
+        for record in msg.answers() {
+            self.parse_record(record);
+        }
+        for record in msg.authorities() {
+            self.parse_record(record);
+        }
+        for record in msg.additionals() {
+            self.parse_record(record);
+        }
+    }
+
+    fn parse_record(&mut self, record: &Record) {}
 }
