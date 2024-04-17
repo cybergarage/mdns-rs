@@ -19,7 +19,7 @@ mod tests {
 
     #[test]
     fn reader_read_bytes() {
-        let mut reader = Reader::new(&[0x01, 0x02, 0x03]);
+        let mut reader = Reader::from_bytes(&[0x01, 0x02, 0x03]);
         let mut buf = [0; 1];
         assert!(reader.read_bytes(&mut buf).is_ok());
         assert_eq!(buf, [0x01]);
@@ -32,13 +32,13 @@ mod tests {
 
     #[test]
     fn reader_read_string() {
-        let mut reader = Reader::new(&[0x03, 'a' as u8, 'b' as u8, 'c' as u8]);
+        let mut reader = Reader::from_bytes(&[0x03, 'a' as u8, 'b' as u8, 'c' as u8]);
         assert_eq!(reader.read_string().unwrap(), "abc");
     }
 
     #[test]
     fn reader_read_strings() {
-        let mut reader = Reader::new(&[
+        let mut reader = Reader::from_bytes(&[
             0x03, 'a' as u8, 'b' as u8, 'c' as u8, 0x03, 'd' as u8, 'e' as u8, 'f' as u8, 0x00,
         ]);
         assert_eq!(reader.read_strings().unwrap(), vec!["abc", "def"]);
@@ -66,7 +66,7 @@ mod tests {
         ];
 
         for test in tests {
-            let mut reader = Reader::new(&test.data);
+            let mut reader = Reader::from_bytes(&test.data);
             assert_eq!(reader.read_name().unwrap(), test.name);
         }
     }

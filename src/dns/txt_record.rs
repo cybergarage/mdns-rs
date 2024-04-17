@@ -24,7 +24,7 @@ pub struct TXTRecord {
 impl TXTRecord {
     pub fn from_record(record: &Record) -> Result<TXTRecord, Error> {
         let data = record.data();
-        let mut reader = Reader::new(data);
+        let mut reader = Reader::from_bytes(data);
         let strs = reader.read_strings()?;
         let txt = TXTRecord { strs: strs };
         Ok(txt)

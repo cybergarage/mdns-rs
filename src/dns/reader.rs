@@ -22,8 +22,8 @@ pub struct Reader<'a> {
 
 /// A structure representing a DNS reader.
 impl<'a> Reader<'a> {
-    /// Create a new reader from the specified bytes.
-    pub fn new(msg_bytes: &'a [u8]) -> Reader<'a> {
+    /// from_bytes creates a new reader from the specified bytes.
+    pub fn from_bytes(msg_bytes: &'a [u8]) -> Reader<'a> {
         Reader {
             buffer: msg_bytes,
             buffer_len: msg_bytes.len(),
@@ -130,7 +130,7 @@ impl<'a> Reader<'a> {
                 let offset =
                     ((label_len as usize) & 0x3f) << 8 | self.buffer[self.cursor + 1] as usize;
                 self.cursor += 2;
-                let mut reader = Reader::new(&self.buffer[offset..]);
+                let mut reader = Reader::from_bytes(&self.buffer[offset..]);
                 let mut compressed_name = reader.read_name()?;
                 if 0 < name.len() {
                     name.push('.');
