@@ -96,6 +96,23 @@ impl<'a> Reader<'a> {
         Ok(String::from_utf8(str_bytes.to_vec()).unwrap())
     }
 
+    pub fn read_strings(&mut self) -> Result<Vec<String>, Error> {
+        let mut strs = Vec::new();
+        loop {
+            let str_len = self.read_string_size()?;
+            if str_len == 0 {
+                break;
+            }
+            if self.buffer_len < self.cursor + str_len {
+                return Err(Error::new(self.buffer, self.cursor));
+            }
+            let str_bytes = &self.buffer[self.cursor..self.cursor + str_len];
+            self.cursor += str_len;
+            strs.push(String::from_utf8(str_bytes.to_vec()).unwrap());
+        }
+        Ok(strs)
+    }
+
     /// read_name reads the next name from the buffer.
     pub fn read_name(&mut self) -> Result<String, Error> {
         let mut name = String::new();
