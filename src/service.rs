@@ -101,6 +101,18 @@ impl Service {
     fn parse_record(&mut self, record: &Record) {
         let data = record.data();
         match record.typ() {
+            Type::SRV => {
+                let srv = crate::dns::SRVRecord::from_record(record).unwrap();
+                self.name = srv.name().to_string();
+                self.domain = srv.proto().to_string();
+                self.host = srv.target().to_string();
+                self.port = srv.port();
+            }
+            Type::TXT => {
+                let txt = crate::dns::TXTRecord::from_record(record).unwrap();
+                self.attrs = txt.attributes().clone();
+            }
+            _ => {}
             Type::A => match ARecord::from_record(record) {
                 Ok(a) => {
                     self.ipaddrs.push(a.ipaddr().clone());
@@ -113,11 +125,6 @@ impl Service {
                 }
                 _ => {}
             },
-            Type::TXT => {
-                let txt = crate::dns::TXTRecord::from_record(record).unwrap();
-                self.attrs = txt.attributes().clone();
-            }
-            _ => {}
         }
     }
 }
