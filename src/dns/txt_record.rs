@@ -52,6 +52,11 @@ impl TXTRecord {
     pub fn attributes(&self) -> &HashMap<String, String> {
         &self.attrs
     }
+
+    /// attribute returns the attribute of the TXT record.
+    pub fn attribute(&self, key: &str) -> Option<&String> {
+        self.attrs.get(key)
+    }
 }
 
 impl fmt::Display for TXTRecord {
