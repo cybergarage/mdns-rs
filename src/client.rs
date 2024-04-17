@@ -18,9 +18,12 @@ use std::sync::Mutex;
 use cybergarage::net::{MulticastManager, Observer, Packet};
 
 use crate::default::{MULTICAST_V4_ADDR, MULTICAST_V6_ADDR, PORT};
+use crate::dns::Message;
+use crate::service::Service;
 
 /// Client represents a client.
 pub struct Client {
+    services: Vec<Service>,
     transport_mgr: MulticastManager,
 }
 
@@ -29,6 +32,7 @@ impl Client {
     pub fn new() -> Arc<Mutex<Client>> {
         let client = Arc::new(Mutex::new(Client {
             transport_mgr: MulticastManager::new(),
+            services: Vec::new(),
         }));
         {
             let mut client_lock = client.lock().unwrap();
@@ -64,7 +68,18 @@ impl Client {
 }
 
 impl Observer for Client {
-    fn packet_received(&mut self, msg: &Packet) {}
+    fn packet_received(&mut self, pkt: &Packet) {
+        let msg = Message::from_bytes(pkt.bytes());
+        match msg {
+            Ok(msg) => {
+                let service = Service::from_message(&msg);
+                self.services.push(service);
+            }
+            Err(_) => {
+                return;
+            }
+        }
+    }
 }
 
 impl Drop for Client {
