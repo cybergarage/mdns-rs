@@ -12,30 +12,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::{Message, Record};
+use crate::dns::{AAAARecord, ARecord, Message, Record, Type};
 use std::net::IpAddr;
 
-pub struct Service<'a> {
-    message: &'a Message,
+pub struct Service {
     name: String,
     domain: String,
     host: String,
-    address: Vec<IpAddr>,
+    ipaddrs: Vec<IpAddr>,
     port: u16,
 }
 
-impl Service<'_> {
+impl Service {
     pub fn from_message(msg: &Message) -> Service {
         let mut srv = Service {
-            message: msg,
             name: String::new(),
             domain: String::new(),
             host: String::new(),
             port: 0,
-            address: Vec::new(),
+            ipaddrs: Vec::new(),
         };
         srv.parse_message(msg);
         srv
+    }
+
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn domain(&self) -> &str {
+        &self.domain
+    }
+
+    pub fn host(&self) -> &str {
+        &self.host
+    }
+
+    pub fn ipaddrs(&self) -> &Vec<IpAddr> {
+        &self.ipaddrs
+    }
+
+    pub fn port(&self) -> u16 {
+        self.port
     }
 
     fn parse_message(&mut self, msg: &Message) {
@@ -53,5 +71,22 @@ impl Service<'_> {
         }
     }
 
-    fn parse_record(&mut self, record: &Record) {}
+    fn parse_record(&mut self, record: &Record) {
+        let data = record.data();
+        match record.typ() {
+            Type::A => match ARecord::from_record(record) {
+                Ok(a) => {
+                    self.ipaddrs.push(a.ipaddr().clone());
+                }
+                _ => {}
+            },
+            Type::AAAA => match AAAARecord::from_record(record) {
+                Ok(a) => {
+                    self.ipaddrs.push(a.ipaddr().clone());
+                }
+                _ => {}
+            },
+            _ => {}
+        }
+    }
 }
