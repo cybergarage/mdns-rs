@@ -37,6 +37,14 @@ mod tests {
     }
 
     #[test]
+    fn reader_read_strings() {
+        let mut reader = Reader::new(&[
+            0x03, 'a' as u8, 'b' as u8, 'c' as u8, 0x03, 'd' as u8, 'e' as u8, 'f' as u8, 0x00,
+        ]);
+        assert_eq!(reader.read_strings().unwrap(), vec!["abc", "def"]);
+    }
+
+    #[test]
     fn reader_read_name() {
         struct Test {
             data: Vec<u8>,
