@@ -21,7 +21,7 @@ pub struct ARecord {
 }
 
 impl ARecord {
-    pub fn from(record: &Record) -> Result<ARecord, Error> {
+    pub fn from_record(record: &Record) -> Result<ARecord, Error> {
         let data = record.data();
         let addr = if data.len() >= 4 {
             let arr: [u8; 4] = data[0..4].try_into().unwrap();
