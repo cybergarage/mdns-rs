@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::dns::a_record::ARecord;
+use crate::dns::aaaa_record::AAAARecord;
 use crate::dns::error::Error;
+use crate::dns::nsec_record::NSECRecord;
+use crate::dns::ptr_record::PTRRecord;
 use crate::dns::record::Record;
+use crate::dns::srv_record::SRVRecord;
+use crate::dns::txt_record::TXTRecord;
 use crate::dns::typ::Type;
-// use create::dns::a_record::ARecord;
-// use create::dns::aaaa_record::AAAARecord;
 
 /// ResourceRecord represents a DNS resource record.
 pub trait ResourceRecord: Send {
@@ -25,18 +29,19 @@ pub trait ResourceRecord: Send {
     // fn content(&self) -> &str;
 }
 
-pub fn resource_record_from_record(record: &Record) -> Result<Box<dyn ResourceRecord>, Error> {
-    match record.typ() {
-        // Type::A => Ok(ARecord::from_record(record)),
-        // Type::AAAA => Ok(AAAARecord::from_record(record)),
-        // Type::CNAME => Ok(CNAMERecord::from_record(record)),
-        // Type::MX => Ok(MXRecord::from_record(record)),
-        // Type::NSEC => Ok(NSECRecord::from_record(record)),
-        // Type::NS => Ok(NSRecord::from_record(record)),
-        // Type::PTR => Ok(PTRRecord::from_record(record)),
-        // Type::SOA => Ok(SOARecord::from_record(record)),
-        // Type::SRV => Ok(SRVRecord::from_record(record)),
-        // Type::TXT => Ok(TXTRecord::from_record(record)),
-        _ => Err(Error::from_bytes(record.data(), 0)),
+impl Record {
+    pub fn to_resource_record(&self) -> Result<Box<dyn ResourceRecord>, Error> {
+        match self.typ() {
+            Type::A => Ok(Box::new(ARecord::from_record(self)?)),
+            Type::AAAA => Ok(Box::new(AAAARecord::from_record(self)?)),
+            Type::TXT => Ok(Box::new(TXTRecord::from_record(self)?)),
+            Type::SRV => Ok(Box::new(SRVRecord::from_record(self)?)),
+            Type::PTR => Ok(Box::new(PTRRecord::from_record(self)?)),
+            Type::NSEC => Ok(Box::new(NSECRecord::from_record(self)?)),
+            _ => Err(Error::from_str(&format!(
+                "Unsupported record type: {:?}",
+                self.typ().to_string()
+            ))),
+        }
     }
 }
