@@ -14,11 +14,13 @@
 
 use std::fmt;
 
+use crate::dns::a_record::ARecord;
+use crate::dns::aaaa_record::AAAARecord;
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
 use crate::dns::records::Records;
-use crate::dns::resource_record::{resource_record_from_record, ResourceRecord};
+use crate::dns::resource_record::*;
 use crate::dns::resource_records::ResourceRecords;
 
 const HEADER_SIZE: usize = 12;
@@ -304,21 +306,21 @@ impl Message {
 
         // Resouce recores
 
-        let mut resouce_records = Vec::new();
+        let mut resouce_records: Vec<Box<dyn ResourceRecord>> = Vec::new();
         for answer in self.answers() {
-            match resource_record_from_record(answer) {
+            match answer.to_resource_record() {
                 Ok(resource_record) => resouce_records.push(resource_record),
                 Err(_) => {}
             }
         }
         for authority in self.authorities() {
-            match resource_record_from_record(authority) {
+            match authority.to_resource_record() {
                 Ok(resource_record) => resouce_records.push(resource_record),
                 Err(_) => {}
             }
         }
         for additional in self.additionals() {
-            match resource_record_from_record(additional) {
+            match additional.to_resource_record() {
                 Ok(resource_record) => resouce_records.push(resource_record),
                 Err(_) => {}
             }
