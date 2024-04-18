@@ -28,6 +28,13 @@ impl Error {
         }
     }
 
+    /// from_string creates a new Error with the specified string.
+    pub fn from_string(str: &String) -> Error {
+        Error {
+            message: str.clone(),
+        }
+    }
+
     /// from_bytes creates a new Error with the specified bytes.
     pub fn from_bytes(msg_bytes: &[u8], offset: usize) -> Error {
         Error {
