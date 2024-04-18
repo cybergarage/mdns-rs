@@ -18,6 +18,8 @@ use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
 use crate::dns::records::Records;
+use crate::dns::resource_record::{resource_record_from_record, ResourceRecord};
+use crate::dns::resource_records::ResourceRecords;
 
 const HEADER_SIZE: usize = 12;
 
@@ -52,6 +54,7 @@ pub struct Message {
     answers: Records,
     authorities: Records,
     additionals: Records,
+    resouce_records: ResourceRecords,
 }
 
 /// Message represents a DNS message.
@@ -64,6 +67,7 @@ impl Message {
             answers: Vec::new(),
             authorities: Vec::new(),
             additionals: Vec::new(),
+            resouce_records: Vec::new(),
         }
     }
 
@@ -233,6 +237,29 @@ impl Message {
     pub fn ar_count(&self) -> u16 {
         self.number_of_entries(10)
     }
+    /// questions returns the questions.
+    pub fn questions(&self) -> &Records {
+        &self.questions
+    }
+
+    /// answers returns the answers.
+    pub fn answers(&self) -> &Records {
+        &self.answers
+    }
+
+    /// authorities returns the authorities.
+    pub fn authorities(&self) -> &Records {
+        &self.authorities
+    }
+
+    /// additionals returns the additionals.
+    pub fn additionals(&self) -> &Records {
+        &self.additionals
+    }
+
+    pub fn resource_records(&self) -> &ResourceRecords {
+        &self.resouce_records
+    }
 
     /// parse_bytes parses the specified message bytes.
     pub fn parse_bytes(&mut self, msg_bytes: &[u8]) -> Result<(), Error> {
@@ -275,27 +302,30 @@ impl Message {
             self.additionals.push(additional);
         }
 
+        // Resouce recores
+
+        let mut resouce_records = Vec::new();
+        for answer in self.answers() {
+            match resource_record_from_record(answer) {
+                Ok(resource_record) => resouce_records.push(resource_record),
+                Err(_) => {}
+            }
+        }
+        for authority in self.authorities() {
+            match resource_record_from_record(authority) {
+                Ok(resource_record) => resouce_records.push(resource_record),
+                Err(_) => {}
+            }
+        }
+        for additional in self.additionals() {
+            match resource_record_from_record(additional) {
+                Ok(resource_record) => resouce_records.push(resource_record),
+                Err(_) => {}
+            }
+        }
+        self.resouce_records = resouce_records;
+
         Ok(())
-    }
-
-    /// questions returns the questions.
-    pub fn questions(&self) -> &Records {
-        &self.questions
-    }
-
-    /// answers returns the answers.
-    pub fn answers(&self) -> &Records {
-        &self.answers
-    }
-
-    /// authorities returns the authorities.
-    pub fn authorities(&self) -> &Records {
-        &self.authorities
-    }
-
-    /// additionals returns the additionals.
-    pub fn additionals(&self) -> &Records {
-        &self.additionals
     }
 
     /// find_record returns the record of the specified name.
@@ -336,7 +366,7 @@ impl Message {
 impl Clone for Message {
     fn clone(&self) -> Message {
         let mut msg = Message::new();
-        msg.parse_bytes(&self.bytes());
+        let _ = msg.parse_bytes(&self.bytes());
         msg
     }
 }
