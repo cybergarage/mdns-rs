@@ -14,6 +14,7 @@
 
 use crate::dns::error::Error;
 use crate::dns::record::Record;
+use crate::dns::typ::Type;
 use std::fmt;
 
 /// NSECRecord represents a NSEC record.
@@ -23,6 +24,11 @@ impl NSECRecord {
     /// from_record creates a new NSEC record from the specified record.
     pub fn from_record(record: &Record) -> Result<NSECRecord, Error> {
         Ok(NSECRecord {})
+    }
+
+    /// typ returns the type of the record.
+    pub fn typ(&self) -> Type {
+        Type::NSEC
     }
 }
 

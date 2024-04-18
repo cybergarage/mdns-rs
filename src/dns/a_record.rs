@@ -14,6 +14,7 @@
 
 use crate::dns::error::Error;
 use crate::dns::record::Record;
+use crate::dns::typ::Type;
 use std::fmt;
 use std::net::{IpAddr, Ipv4Addr};
 
@@ -34,6 +35,11 @@ impl ARecord {
         };
         let a = ARecord { ipaddr: addr };
         Ok(a)
+    }
+
+    /// typ returns the type of the A record.
+    pub fn typ(&self) -> Type {
+        Type::A
     }
 
     /// ipaddr returns the IP address of the A record.

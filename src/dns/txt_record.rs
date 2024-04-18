@@ -15,6 +15,7 @@
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
+use crate::dns::typ::Type;
 use std::collections::HashMap;
 use std::fmt;
 
@@ -41,6 +42,11 @@ impl TXTRecord {
             attrs: attrs,
         };
         Ok(txt)
+    }
+
+    /// typ returns the type of the TXT record.
+    pub fn typ(&self) -> Type {
+        Type::TXT
     }
 
     /// strings returns the strings of the TXT record.

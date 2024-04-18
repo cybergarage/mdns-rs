@@ -15,6 +15,7 @@
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
+use crate::dns::typ::Type;
 use std::fmt;
 
 /// SRVRecord represents a SRV record.
@@ -50,6 +51,11 @@ impl SRVRecord {
         srv.port = reader.read_u16()?;
         srv.target = reader.read_name()?;
         Ok(srv)
+    }
+
+    /// typ returns the type of the SRV record.
+    pub fn typ(&self) -> Type {
+        Type::SRV
     }
 
     /// service returns the service of the SRV record.
