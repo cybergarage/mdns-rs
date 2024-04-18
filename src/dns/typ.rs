@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::fmt::*;
+
 pub const TYPE_MASK: u16 = 0x7fff;
 
 #[derive(Copy, Clone, PartialEq)]
@@ -33,6 +35,7 @@ pub enum Type {
 }
 
 impl Type {
+    /// from_value returns the type of the value.
     pub fn from_value(value: u16) -> Type {
         match value {
             0x0001 => Type::A,
@@ -52,6 +55,7 @@ impl Type {
         }
     }
 
+    /// to_value returns the value of the type.
     pub fn to_value(&self) -> u16 {
         match self {
             Type::A => 0x0001,
@@ -69,5 +73,37 @@ impl Type {
             Type::NONE => 0x0000,
             Type::NSEC => 0x0027,
         }
+    }
+
+    /// to_string returns the string representation of the type.
+    pub fn to_string(&self) -> String {
+        match self {
+            Type::A => "A".to_string(),
+            Type::NS => "NS".to_string(),
+            Type::CNAME => "CNAME".to_string(),
+            Type::SOA => "SOA".to_string(),
+            Type::PTR => "PTR".to_string(),
+            Type::MX => "MX".to_string(),
+            Type::TXT => "TXT".to_string(),
+            Type::AAAA => "AAAA".to_string(),
+            Type::SRV => "SRV".to_string(),
+            Type::NAPTR => "NAPTR".to_string(),
+            Type::OPT => "OPT".to_string(),
+            Type::ANY => "ANY".to_string(),
+            Type::NONE => "NONE".to_string(),
+            Type::NSEC => "NSEC".to_string(),
+        }
+    }
+}
+
+impl Default for Type {
+    fn default() -> Type {
+        Type::NONE
+    }
+}
+
+impl Display for Type {
+    fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.to_string())
     }
 }
