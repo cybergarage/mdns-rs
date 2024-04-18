@@ -29,6 +29,7 @@ pub enum Type {
     NAPTR = 0x0023,
     OPT = 0x0029,
     ANY = 0x00ff,
+    NSEC = 0x0027,
 }
 
 impl Type {
@@ -46,6 +47,7 @@ impl Type {
             0x0023 => Type::NAPTR,
             0x0029 => Type::OPT,
             0x00ff => Type::ANY,
+            0x0027 => Type::NSEC,
             _ => Type::NONE,
         }
     }
@@ -65,6 +67,7 @@ impl Type {
             Type::OPT => 0x0029,
             Type::ANY => 0x00ff,
             Type::NONE => 0x0000,
+            Type::NSEC => 0x0027,
         }
     }
 }
