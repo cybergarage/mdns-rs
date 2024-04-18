@@ -17,6 +17,7 @@ use crate::dns::reader::Reader;
 use crate::dns::record::Record;
 use std::fmt;
 
+/// SRVRecord represents a SRV record.
 pub struct SRVRecord {
     service: String,
     proto: String,
