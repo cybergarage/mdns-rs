@@ -31,7 +31,7 @@ impl ARecord {
             let arr: [u8; 4] = data[0..4].try_into().unwrap();
             IpAddr::V4(Ipv4Addr::from(arr))
         } else {
-            return Err(Error::new(data, 0));
+            return Err(Error::from_bytes(data, 0));
         };
         let a = ARecord { ipaddr: addr };
         Ok(a)

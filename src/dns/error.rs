@@ -18,21 +18,23 @@ use std::fmt;
 #[derive(Debug, Clone)]
 pub struct Error {
     pub message: String,
-    pub offset: usize,
 }
 
 impl Error {
-    pub fn new(msg_bytes: &[u8], offset: usize) -> Error {
+    pub fn from_bytes(msg_bytes: &[u8], offset: usize) -> Error {
         Error {
-            message: hex::encode(msg_bytes),
-            offset: offset,
+            message: format!(
+                "Invalid bytes {} (offset:{})",
+                hex::encode(msg_bytes),
+                offset
+            ),
         }
     }
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} (offset:{})", self.message, self.offset)
+        write!(f, "{}", self.message)
     }
 }
 

@@ -267,7 +267,7 @@ impl Message {
 
         // Header
         if reader.read_bytes(&mut self.header).is_err() {
-            return Err(Error::new(msg_bytes, 0));
+            return Err(Error::from_bytes(msg_bytes, 0));
         }
 
         // Questions

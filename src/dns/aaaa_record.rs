@@ -31,7 +31,7 @@ impl AAAARecord {
             let arr: [u8; 16] = data[0..16].try_into().unwrap();
             IpAddr::V6(Ipv6Addr::from(arr))
         } else {
-            return Err(Error::new(data, 0));
+            return Err(Error::from_bytes(data, 0));
         };
         let a = AAAARecord { ipaddr: addr };
         Ok(a)

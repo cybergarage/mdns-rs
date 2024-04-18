@@ -37,6 +37,6 @@ pub fn resource_record_from_record(record: &Record) -> Result<Box<dyn ResourceRe
         // Type::SOA => Ok(SOARecord::from_record(record)),
         // Type::SRV => Ok(SRVRecord::from_record(record)),
         // Type::TXT => Ok(TXTRecord::from_record(record)),
-        _ => Err(Error::new(record.data(), 0)),
+        _ => Err(Error::from_bytes(record.data(), 0)),
     }
 }

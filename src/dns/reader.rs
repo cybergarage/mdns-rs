@@ -44,7 +44,7 @@ impl<'a> Reader<'a> {
     // read_u8 reads the next byte from the buffer.
     pub fn read_u8(&mut self) -> Result<u8, Error> {
         if self.buffer_len < self.cursor {
-            return Err(Error::new(self.buffer, self.cursor));
+            return Err(Error::from_bytes(self.buffer, self.cursor));
         }
         let v = self.buffer[self.cursor];
         self.cursor += 1;
@@ -68,7 +68,7 @@ impl<'a> Reader<'a> {
     /// read_bytes reads the next bytes into the buffer.
     pub fn read_bytes(&mut self, buf: &mut [u8]) -> Result<(), Error> {
         if self.buffer_len < self.cursor + buf.len() {
-            return Err(Error::new(self.buffer, self.cursor));
+            return Err(Error::from_bytes(self.buffer, self.cursor));
         }
         buf.copy_from_slice(&self.buffer[self.cursor..self.cursor + buf.len()]);
         self.cursor += buf.len();
@@ -78,7 +78,7 @@ impl<'a> Reader<'a> {
     /// read_string_size reads the next string size from the buffer.
     pub fn read_string_size(&mut self) -> Result<usize, Error> {
         if self.buffer_len < self.cursor {
-            return Err(Error::new(self.buffer, self.cursor));
+            return Err(Error::from_bytes(self.buffer, self.cursor));
         }
         let str_len = self.buffer[self.cursor] as usize;
         self.cursor += 1;
@@ -89,7 +89,7 @@ impl<'a> Reader<'a> {
     pub fn read_string(&mut self) -> Result<String, Error> {
         let str_len = self.read_string_size()?;
         if self.buffer_len < self.cursor + str_len {
-            return Err(Error::new(self.buffer, self.cursor));
+            return Err(Error::from_bytes(self.buffer, self.cursor));
         }
         let str_bytes = &self.buffer[self.cursor..self.cursor + str_len];
         self.cursor += str_len;
@@ -104,7 +104,7 @@ impl<'a> Reader<'a> {
                 break;
             }
             if self.buffer_len < self.cursor + str_len {
-                return Err(Error::new(self.buffer, self.cursor));
+                return Err(Error::from_bytes(self.buffer, self.cursor));
             }
             let str_bytes = &self.buffer[self.cursor..self.cursor + str_len];
             self.cursor += str_len;
