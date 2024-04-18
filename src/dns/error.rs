@@ -21,6 +21,14 @@ pub struct Error {
 }
 
 impl Error {
+    /// from_str creates a new Error with the specified string.
+    pub fn from_str(str: &str) -> Error {
+        Error {
+            message: str.to_string(),
+        }
+    }
+
+    /// from_bytes creates a new Error with the specified bytes.
     pub fn from_bytes(msg_bytes: &[u8], offset: usize) -> Error {
         Error {
             message: format!(
