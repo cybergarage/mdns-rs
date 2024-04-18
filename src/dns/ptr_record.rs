@@ -12,13 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::dns::error::Error;
+use crate::dns::reader::Reader;
+use crate::dns::record::Record;
 use std::fmt;
 
-pub struct PTRRecord {}
+/// PTRRecord represents a PTR record.
+pub struct PTRRecord {
+    domain_name: String,
+}
 
 impl PTRRecord {
-    pub fn new() -> PTRRecord {
-        PTRRecord {}
+    /// from_record creates a new PTR record from the specified record.
+    pub fn from_record(record: &Record) -> Result<PTRRecord, Error> {
+        let data = record.data();
+        let mut reader = Reader::from_bytes(data);
+        let domain_name = reader.read_name()?;
+        let ptr = PTRRecord {
+            domain_name: String::new(),
+        };
+        Ok(ptr)
+    }
+
+    ///
+    pub fn domain_name(&self) -> &str {
+        &self.domain_name
     }
 }
 
