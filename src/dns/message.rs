@@ -350,6 +350,12 @@ impl Message {
         None
     }
 
+    /// to_string returns the message as a string.
+    pub fn to_string(&self) -> String {
+        let mut msg_str = String::new();
+        msg_str
+    }
+
     pub fn equals(&self, msg: &Message) -> bool {
         true
     }
@@ -369,7 +375,7 @@ impl Clone for Message {
 }
 
 impl fmt::Display for Message {
-    fn fmt(&self, _f: &mut fmt::Formatter) -> fmt::Result {
-        Ok(())
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.to_string())
     }
 }
