@@ -17,6 +17,7 @@ use std::fmt;
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
+use crate::dns::records::Records;
 
 const HEADER_SIZE: usize = 12;
 
@@ -47,10 +48,10 @@ pub enum ResponseCode {
 /// Message represents a DNS message.
 pub struct Message {
     header: [u8; HEADER_SIZE],
-    questions: Vec<Record>,
-    answers: Vec<Record>,
-    authorities: Vec<Record>,
-    additionals: Vec<Record>,
+    questions: Records,
+    answers: Records,
+    authorities: Records,
+    additionals: Records,
 }
 
 /// Message represents a DNS message.
@@ -278,22 +279,22 @@ impl Message {
     }
 
     /// questions returns the questions.
-    pub fn questions(&self) -> &Vec<Record> {
+    pub fn questions(&self) -> &Records {
         &self.questions
     }
 
     /// answers returns the answers.
-    pub fn answers(&self) -> &Vec<Record> {
+    pub fn answers(&self) -> &Records {
         &self.answers
     }
 
     /// authorities returns the authorities.
-    pub fn authorities(&self) -> &Vec<Record> {
+    pub fn authorities(&self) -> &Records {
         &self.authorities
     }
 
     /// additionals returns the additionals.
-    pub fn additionals(&self) -> &Vec<Record> {
+    pub fn additionals(&self) -> &Records {
         &self.additionals
     }
 
