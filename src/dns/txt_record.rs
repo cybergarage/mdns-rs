@@ -15,6 +15,7 @@
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
+use crate::dns::resource_record::ResourceRecord;
 use crate::dns::typ::Type;
 use std::collections::HashMap;
 use std::fmt;
@@ -62,6 +63,12 @@ impl TXTRecord {
     /// attribute returns the attribute of the TXT record.
     pub fn attribute(&self, key: &str) -> Option<&String> {
         self.attrs.get(key)
+    }
+}
+
+impl ResourceRecord for TXTRecord {
+    fn typ(&self) -> Type {
+        Type::TXT
     }
 }
 

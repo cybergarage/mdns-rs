@@ -15,6 +15,8 @@
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
+use crate::dns::resource_record::ResourceRecord;
+use crate::dns::typ::Type;
 use std::fmt;
 
 /// PTRRecord represents a PTR record.
@@ -37,6 +39,12 @@ impl PTRRecord {
     ///
     pub fn domain_name(&self) -> &str {
         &self.domain_name
+    }
+}
+
+impl ResourceRecord for PTRRecord {
+    fn typ(&self) -> Type {
+        Type::PTR
     }
 }
 

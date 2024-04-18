@@ -14,6 +14,7 @@
 
 use crate::dns::error::Error;
 use crate::dns::record::Record;
+use crate::dns::resource_record::ResourceRecord;
 use crate::dns::typ::Type;
 use std::fmt;
 use std::net::{IpAddr, Ipv6Addr};
@@ -45,6 +46,12 @@ impl AAAARecord {
     /// ipaddr returns the IP address of the AAAA record.
     pub fn ipaddr(&self) -> &IpAddr {
         &self.ipaddr
+    }
+}
+
+impl ResourceRecord for AAAARecord {
+    fn typ(&self) -> Type {
+        Type::AAAA
     }
 }
 

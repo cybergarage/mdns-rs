@@ -15,6 +15,7 @@
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
+use crate::dns::resource_record::ResourceRecord;
 use crate::dns::typ::Type;
 use std::fmt;
 
@@ -91,6 +92,12 @@ impl SRVRecord {
     /// target returns the target of the SRV record.
     pub fn target(&self) -> &str {
         &self.target
+    }
+}
+
+impl ResourceRecord for SRVRecord {
+    fn typ(&self) -> Type {
+        Type::SRV
     }
 }
 

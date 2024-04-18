@@ -14,6 +14,7 @@
 
 use crate::dns::error::Error;
 use crate::dns::record::Record;
+use crate::dns::resource_record::ResourceRecord;
 use crate::dns::typ::Type;
 use std::fmt;
 
@@ -28,6 +29,12 @@ impl NSECRecord {
 
     /// typ returns the type of the record.
     pub fn typ(&self) -> Type {
+        Type::NSEC
+    }
+}
+
+impl ResourceRecord for NSECRecord {
+    fn typ(&self) -> Type {
         Type::NSEC
     }
 }
