@@ -56,7 +56,6 @@ pub struct Message {
     answers: Records,
     authorities: Records,
     additionals: Records,
-    resouce_records: ResourceRecords,
 }
 
 /// Message represents a DNS message.
@@ -69,7 +68,6 @@ impl Message {
             answers: Vec::new(),
             authorities: Vec::new(),
             additionals: Vec::new(),
-            resouce_records: Vec::new(),
         }
     }
 
@@ -259,8 +257,28 @@ impl Message {
         &self.additionals
     }
 
-    pub fn resource_records(&self) -> &ResourceRecords {
-        &self.resouce_records
+    /// resource_records returns the all resource records.
+    pub fn resource_records(&self) -> ResourceRecords {
+        let mut resouce_records: Vec<Box<dyn ResourceRecord>> = Vec::new();
+        for answer in self.answers() {
+            match answer.to_resource_record() {
+                Ok(resource_record) => resouce_records.push(resource_record),
+                Err(_) => {}
+            }
+        }
+        for authority in self.authorities() {
+            match authority.to_resource_record() {
+                Ok(resource_record) => resouce_records.push(resource_record),
+                Err(_) => {}
+            }
+        }
+        for additional in self.additionals() {
+            match additional.to_resource_record() {
+                Ok(resource_record) => resouce_records.push(resource_record),
+                Err(_) => {}
+            }
+        }
+        resouce_records
     }
 
     /// parse_bytes parses the specified message bytes.
@@ -303,29 +321,6 @@ impl Message {
             additional.parse_resource_record(&mut reader)?;
             self.additionals.push(additional);
         }
-
-        // Resouce recores
-
-        let mut resouce_records: Vec<Box<dyn ResourceRecord>> = Vec::new();
-        for answer in self.answers() {
-            match answer.to_resource_record() {
-                Ok(resource_record) => resouce_records.push(resource_record),
-                Err(_) => {}
-            }
-        }
-        for authority in self.authorities() {
-            match authority.to_resource_record() {
-                Ok(resource_record) => resouce_records.push(resource_record),
-                Err(_) => {}
-            }
-        }
-        for additional in self.additionals() {
-            match additional.to_resource_record() {
-                Ok(resource_record) => resouce_records.push(resource_record),
-                Err(_) => {}
-            }
-        }
-        self.resouce_records = resouce_records;
 
         Ok(())
     }
