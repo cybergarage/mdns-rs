@@ -21,6 +21,7 @@ use std::net::{IpAddr, Ipv6Addr};
 
 /// AAAARecord represents an AAAA record.
 pub struct AAAARecord {
+    name: String,
     ipaddr: IpAddr,
 }
 
@@ -34,7 +35,10 @@ impl AAAARecord {
         } else {
             return Err(Error::from_bytes(data, 0));
         };
-        let a = AAAARecord { ipaddr: addr };
+        let a = AAAARecord {
+            name: record.name().to_string(),
+            ipaddr: addr,
+        };
         Ok(a)
     }
 
@@ -50,8 +54,16 @@ impl AAAARecord {
 }
 
 impl ResourceRecord for AAAARecord {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
     fn typ(&self) -> Type {
         Type::AAAA
+    }
+
+    fn content(&self) -> &str {
+        ""
     }
 }
 

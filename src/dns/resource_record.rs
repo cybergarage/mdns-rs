@@ -24,9 +24,12 @@ use crate::dns::typ::Type;
 
 /// ResourceRecord represents a DNS resource record.
 pub trait ResourceRecord: Send {
-    // fn name(&self) -> &str;
+    /// name returns the name of the record.
+    fn name(&self) -> &str;
+    /// typ returns the type of the record.
     fn typ(&self) -> Type;
-    // fn content(&self) -> &str;
+    /// content returns the string representation of the record data.
+    fn content(&self) -> &str;
 }
 
 impl Record {

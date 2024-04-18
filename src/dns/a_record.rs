@@ -21,6 +21,8 @@ use std::net::{IpAddr, Ipv4Addr};
 
 /// ARecord represents an A record.
 pub struct ARecord {
+    name: String,
+
     ipaddr: IpAddr,
 }
 
@@ -34,7 +36,10 @@ impl ARecord {
         } else {
             return Err(Error::from_bytes(data, 0));
         };
-        let a = ARecord { ipaddr: addr };
+        let a = ARecord {
+            name: record.name().to_string(),
+            ipaddr: addr,
+        };
         Ok(a)
     }
 
@@ -45,8 +50,16 @@ impl ARecord {
 }
 
 impl ResourceRecord for ARecord {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
     fn typ(&self) -> Type {
         Type::A
+    }
+
+    fn content(&self) -> &str {
+        ""
     }
 }
 

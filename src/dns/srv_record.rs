@@ -36,7 +36,7 @@ impl SRVRecord {
         let mut srv = SRVRecord {
             service: "".to_string(),
             proto: "".to_string(),
-            name: "".to_string(),
+            name: record.name().to_string(),
             priority: 0,
             weight: 0,
             port: 0,
@@ -96,8 +96,16 @@ impl SRVRecord {
 }
 
 impl ResourceRecord for SRVRecord {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
     fn typ(&self) -> Type {
         Type::SRV
+    }
+
+    fn content(&self) -> &str {
+        ""
     }
 }
 

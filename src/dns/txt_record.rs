@@ -21,6 +21,7 @@ use std::collections::HashMap;
 use std::fmt;
 
 pub struct TXTRecord {
+    name: String,
     strs: Vec<String>,
     attrs: HashMap<String, String>,
 }
@@ -39,15 +40,16 @@ impl TXTRecord {
             attrs.insert(key, value);
         }
         let txt = TXTRecord {
+            name: record.name().to_string(),
             strs: strs,
             attrs: attrs,
         };
         Ok(txt)
     }
 
-    /// typ returns the type of the TXT record.
-    pub fn typ(&self) -> Type {
-        Type::TXT
+    /// name returns the name of the TXT record.
+    pub fn name(&self) -> &str {
+        &self.name
     }
 
     /// strings returns the strings of the TXT record.
@@ -67,8 +69,16 @@ impl TXTRecord {
 }
 
 impl ResourceRecord for TXTRecord {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
     fn typ(&self) -> Type {
         Type::TXT
+    }
+
+    fn content(&self) -> &str {
+        ""
     }
 }
 

@@ -19,12 +19,16 @@ use crate::dns::typ::Type;
 use std::fmt;
 
 /// NSECRecord represents a NSEC record.
-pub struct NSECRecord {}
+pub struct NSECRecord {
+    name: String,
+}
 
 impl NSECRecord {
     /// from_record creates a new NSEC record from the specified record.
     pub fn from_record(record: &Record) -> Result<NSECRecord, Error> {
-        Ok(NSECRecord {})
+        Ok(NSECRecord {
+            name: record.name().to_string(),
+        })
     }
 
     /// typ returns the type of the record.
@@ -34,8 +38,16 @@ impl NSECRecord {
 }
 
 impl ResourceRecord for NSECRecord {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
     fn typ(&self) -> Type {
         Type::NSEC
+    }
+
+    fn content(&self) -> &str {
+        ""
     }
 }
 

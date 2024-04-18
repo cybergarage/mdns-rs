@@ -21,6 +21,8 @@ use std::fmt;
 
 /// PTRRecord represents a PTR record.
 pub struct PTRRecord {
+    name: String,
+
     domain_name: String,
 }
 
@@ -31,6 +33,7 @@ impl PTRRecord {
         let mut reader = Reader::from_bytes(data);
         let domain_name = reader.read_name()?;
         let ptr = PTRRecord {
+            name: record.name().to_string(),
             domain_name: String::new(),
         };
         Ok(ptr)
@@ -43,8 +46,16 @@ impl PTRRecord {
 }
 
 impl ResourceRecord for PTRRecord {
+    fn name(&self) -> &str {
+        &self.name
+    }
+
     fn typ(&self) -> Type {
         Type::PTR
+    }
+
+    fn content(&self) -> &str {
+        ""
     }
 }
 
