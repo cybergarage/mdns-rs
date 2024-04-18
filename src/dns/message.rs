@@ -353,6 +353,19 @@ impl Message {
     /// to_string returns the message as a string.
     pub fn to_string(&self) -> String {
         let mut msg_str = String::new();
+        struct Record(String, String, String);
+        let mut records = Vec::new();
+        for rrecord in self.resource_records() {
+            let record = Record(
+                rrecord.name().to_string(),
+                rrecord.typ().to_string(),
+                rrecord.content().to_string(),
+            );
+            records.push(record);
+        }
+        for record in records {
+            msg_str.push_str(&format!("{} {} {}\n", record.0, record.1, record.2));
+        }
         msg_str
     }
 
