@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::{AAAARecord, ARecord, Message, Record, Type};
+use crate::dns::{AAAARecord, ARecord, Message, Record, ResourceRecords, Type};
 use std::collections::HashMap;
 use std::net::IpAddr;
 
@@ -46,6 +46,11 @@ impl Service {
     /// message returns the message of the service.
     pub fn message(&self) -> &Message {
         &self.msg
+    }
+
+    /// resource_records returns the resource records of the service.
+    pub fn resource_records(&self) -> ResourceRecords {
+        self.msg.resource_records()
     }
 
     /// name returns the name of the service.
