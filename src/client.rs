@@ -45,7 +45,7 @@ impl Client {
     ///query queries the client.
     pub fn query(&mut self, query: &Query) {
         let mut q = QuestionRecord::new();
-        q.set_name(query.service());
+        q.set_name(&query.to_string());
     }
 
     /// is_running returns true if the client is running.

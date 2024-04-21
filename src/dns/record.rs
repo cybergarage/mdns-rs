@@ -141,8 +141,8 @@ impl Record {
         Ok(())
     }
 
-    /// bytes returns the bytes of the record.
-    pub fn bytes(&self) -> Vec<u8> {
+    /// to_request_bytes returns the request bytes of the record.
+    pub fn to_request_bytes(&self) -> Vec<u8> {
         let mut data = Vec::new();
         data.extend_from_slice(self.name.as_bytes());
         data.extend_from_slice(&self.typ.to_value().to_be_bytes());
