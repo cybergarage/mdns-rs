@@ -140,6 +140,18 @@ impl Record {
 
         Ok(())
     }
+
+    /// bytes returns the bytes of the record.
+    pub fn bytes(&self) -> Vec<u8> {
+        let mut data = Vec::new();
+        data.extend_from_slice(self.name.as_bytes());
+        data.extend_from_slice(&self.typ.to_value().to_be_bytes());
+        // data.extend_from_slice(&((self.class.to_value() << CLASS_SHIFT) | (self.unicast_response as u16)).to_be_bytes());
+        data.extend_from_slice(&self.ttl.to_be_bytes());
+        data.extend_from_slice(&(self.data.len() as u16).to_be_bytes());
+        data.extend_from_slice(&self.data);
+        data
+    }
 }
 
 impl fmt::Display for Record {
