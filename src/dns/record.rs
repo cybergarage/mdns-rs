@@ -29,7 +29,6 @@ pub struct Record {
     ttl: u32,
 }
 
-/// A structure representing a DNS record.
 impl Record {
     /// Create a new record.
     pub fn new() -> Record {
@@ -43,35 +42,73 @@ impl Record {
         }
     }
 
+    /// set_name sets the name of the record.
+    pub fn set_name(&mut self, name: &str) {
+        self.name = name.to_string();
+    }
+
+    /// name returns the name of the record.
     pub fn name(&self) -> &str {
         &self.name
     }
 
+    /// set_typ sets the type of the record.
+    pub fn set_typ(&mut self, typ: Type) {
+        self.typ = typ;
+    }
+
+    /// typ returns the type of the record.
     pub fn typ(&self) -> Type {
         self.typ
     }
 
+    /// set_class sets the class of the record.
+    pub fn set_class(&mut self, class: Class) {
+        self.class = class;
+    }
+
+    /// class returns the class of the record.
     pub fn class(&self) -> Class {
         self.class
     }
 
+    /// set_data sets the data of the record.
+    pub fn set_data(&mut self, data: Vec<u8>) {
+        self.data = data;
+    }
+
+    /// data returns the data of the record.
     pub fn data(&self) -> &[u8] {
         &self.data
     }
 
+    /// set_unicast_response sets the unicast response flag of the record.
+    pub fn set_unicast_response(&mut self, unicast_response: bool) {
+        self.unicast_response = unicast_response;
+    }
+
+    /// uniast_response returns the unicast response flag of the record.
     pub fn unicast_response(&self) -> bool {
         self.unicast_response
     }
 
+    /// set_ttl sets the TTL of the record.
+    pub fn set_ttl(&mut self, ttl: u32) {
+        self.ttl = ttl;
+    }
+
+    /// ttl returns the TTL of the record.
     pub fn ttl(&self) -> u32 {
         self.ttl
     }
 
+    /// parse_request_record parses a request record.
     pub fn parse_request_record(&mut self, reader: &mut Reader) -> Result<(), Error> {
         self.parse_section(reader)?;
         Ok(())
     }
 
+    /// parse_resource_record parses a resource record.
     pub fn parse_resource_record(&mut self, reader: &mut Reader) -> Result<(), Error> {
         self.parse_section(reader)?;
 
