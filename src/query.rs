@@ -50,4 +50,9 @@ impl Query {
     pub fn domain(&self) -> &str {
         &self.domain
     }
+
+    /// to_string returns the string representation of the query.
+    pub fn to_string(&self) -> String {
+        format!("{}.{}", self.service, self.domain)
+    }
 }
