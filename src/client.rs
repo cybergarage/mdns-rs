@@ -19,6 +19,7 @@ use cybergarage::net::{MulticastManager, Observer, Packet};
 
 use crate::default::{MULTICAST_V4_ADDR, MULTICAST_V6_ADDR, PORT};
 use crate::dns::Message;
+use crate::query::Query;
 use crate::service::Service;
 
 /// Client represents a client.
@@ -40,6 +41,9 @@ impl Client {
         } // client_lock is dropped here
         client
     }
+
+    ///query queries the client.
+    pub fn query(&mut self, query: &Query) {}
 
     /// is_running returns true if the client is running.
     pub fn is_running(&self) -> bool {
