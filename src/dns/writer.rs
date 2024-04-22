@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::dns::class::Class;
 use crate::dns::error::Error;
+use crate::dns::typ::Type;
 
 /// Writer represents a DNS writer.
 pub struct Writer {
@@ -28,6 +30,66 @@ impl Writer {
     /// write_u8 writes a u8 value.
     pub fn write_u8(&mut self, value: u8) -> Result<(), Error> {
         self.buffer.push(value);
+        Ok(())
+    }
+
+    /// write_u16 writes a u16 value.
+    pub fn write_u16(&mut self, value: u16) -> Result<(), Error> {
+        self.buffer.push(((value >> 8) & 0xff) as u8);
+        self.buffer.push((value & 0xff) as u8);
+        Ok(())
+    }
+
+    /// write_u32 writes a u32 value.
+    pub fn write_u32(&mut self, value: u32) -> Result<(), Error> {
+        self.buffer.push(((value >> 24) & 0xff) as u8);
+        self.buffer.push(((value >> 16) & 0xff) as u8);
+        self.buffer.push(((value >> 8) & 0xff) as u8);
+        self.buffer.push((value & 0xff) as u8);
+        Ok(())
+    }
+
+    /// write_bytes writes a byte slice.
+    pub fn write_bytes(&mut self, bytes: &[u8]) -> Result<(), Error> {
+        for b in bytes {
+            self.buffer.push(*b);
+        }
+        Ok(())
+    }
+
+    /// write_type writes a type.
+    pub fn write_type(&mut self, typ: Type) -> Result<(), Error> {
+        self.write_u16(typ as u16)
+    }
+
+    /// write_class writes a class.
+    pub fn write_class(&mut self, class: Class) -> Result<(), Error> {
+        self.write_u16(class as u16)
+    }
+
+    /// write_ttl writes a TTL.
+    pub fn write_ttl(&mut self, ttl: u32) -> Result<(), Error> {
+        self.write_u32(ttl)
+    }
+
+    /// write_data writes data.
+    pub fn write_data(&mut self, data: &[u8]) -> Result<(), Error> {
+        let len = data.len();
+        self.write_u16(len as u16)?;
+        self.write_bytes(data)
+    }
+
+    /// write_name writes a domain name.
+    pub fn write_name(&mut self, name: &str) -> Result<(), Error> {
+        let mut labels = name.split('.');
+        for label in labels {
+            let len = label.len();
+            self.write_u8(len as u8)?;
+            for c in label.chars() {
+                self.write_u8(c as u8)?;
+            }
+        }
+        self.write_u8(0)?;
         Ok(())
     }
 }
