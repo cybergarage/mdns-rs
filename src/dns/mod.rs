@@ -27,6 +27,7 @@ pub use self::resource_records::*;
 pub use self::srv_record::*;
 pub use self::txt_record::*;
 pub use self::typ::*;
+pub use self::writer::*;
 
 mod a_record;
 mod aaaa_record;
@@ -44,6 +45,7 @@ mod resource_records;
 mod srv_record;
 mod txt_record;
 mod typ;
+mod writer;
 
 mod message_test;
 mod reader_test;
