@@ -141,19 +141,6 @@ impl Record {
 
         Ok(())
     }
-
-    /// to_request_bytes returns the request bytes of the record.
-    pub fn to_request_bytes(&self) -> Result<Vec<u8>, Error> {
-        let mut writer = Writer::new();
-        writer.write_name(&self.name)?;
-        writer.write_type(self.typ)?;
-        let mut cls = self.cls as u16;
-        if self.unicast_response {
-            cls |= UNICAST_RESPONSE_MASK;
-        }
-        writer.write_u16(cls)?;
-        Ok(writer.to_bytes())
-    }
 }
 
 impl fmt::Display for Record {
