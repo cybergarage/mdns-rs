@@ -377,20 +377,17 @@ impl Message {
     pub fn bytes(&self) -> Result<Vec<u8>, Error> {
         let mut w = Writer::new();
         w.write_bytes(&self.header)?;
-        if self.is_query() {
-            for question in self.questions() {
-                w.write_request_record(&question)?;
-            }
-        } else {
-            for answer in self.answers() {
-                w.write_resource_record(&answer)?;
-            }
-            for authority in self.authorities() {
-                w.write_resource_record(&authority)?;
-            }
-            for additional in self.additionals() {
-                w.write_resource_record(&additional)?;
-            }
+        for question in self.questions() {
+            w.write_request_record(&question)?;
+        }
+        for answer in self.answers() {
+            w.write_resource_record(&answer)?;
+        }
+        for authority in self.authorities() {
+            w.write_resource_record(&authority)?;
+        }
+        for additional in self.additionals() {
+            w.write_resource_record(&additional)?;
         }
         Ok(w.to_bytes())
     }
