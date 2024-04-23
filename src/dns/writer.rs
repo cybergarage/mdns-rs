@@ -112,8 +112,8 @@ impl Writer {
         Ok(())
     }
 
-    /// write_resource_record writes a resource record.
-    pub fn write_resource_record(&mut self, record: &Record) -> Result<(), Error> {
+    /// write_response_record writes a response record.
+    pub fn write_response_record(&mut self, record: &Record) -> Result<(), Error> {
         self.write_request_record(record)?;
         self.write_ttl(record.ttl())?;
         self.write_data(record.data())?;

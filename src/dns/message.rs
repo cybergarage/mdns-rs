@@ -381,13 +381,13 @@ impl Message {
             w.write_request_record(&question)?;
         }
         for answer in self.answers() {
-            w.write_resource_record(&answer)?;
+            w.write_response_record(&answer)?;
         }
         for authority in self.authorities() {
-            w.write_resource_record(&authority)?;
+            w.write_response_record(&authority)?;
         }
         for additional in self.additionals() {
-            w.write_resource_record(&additional)?;
+            w.write_response_record(&additional)?;
         }
         Ok(w.to_bytes())
     }
