@@ -15,11 +15,11 @@
 pub use self::client::Client;
 pub use self::query::Query;
 pub use self::service::Service;
-
 mod dns;
 
 mod client;
 mod default;
+mod message;
 mod query;
 mod service;
 
