@@ -22,6 +22,7 @@ use crate::dns::record::Record;
 use crate::dns::records::Records;
 use crate::dns::resource_record::*;
 use crate::dns::resource_records::ResourceRecords;
+use crate::dns::writer::Writer;
 
 const HEADER_SIZE: usize = 12;
 
@@ -373,16 +374,37 @@ impl Message {
         true
     }
 
-    pub fn bytes(&self) -> Vec<u8> {
-        let mut msg_bytes: Vec<u8> = Vec::new();
-        msg_bytes
+    pub fn bytes(&self) -> Result<Vec<u8>, Error> {
+        let mut w = Writer::new();
+        w.write_bytes(&self.header)?;
+        if self.is_query() {
+            for question in self.questions() {
+                w.write_request_record(&question)?;
+            }
+        } else {
+            for answer in self.answers() {
+                w.write_resource_record(&answer)?;
+            }
+            for authority in self.authorities() {
+                w.write_resource_record(&authority)?;
+            }
+            for additional in self.additionals() {
+                w.write_resource_record(&additional)?;
+            }
+        }
+        Ok(w.to_bytes())
     }
 }
 
 impl Clone for Message {
     fn clone(&self) -> Message {
         let mut msg = Message::new();
-        let _ = msg.parse_bytes(&self.bytes());
+        match msg.bytes() {
+            Ok(bytes) => {
+                let _ = msg.parse_bytes(&bytes);
+            }
+            Err(_) => {}
+        }
         msg
     }
 }
