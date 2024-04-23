@@ -57,6 +57,11 @@ impl Writer {
         Ok(())
     }
 
+    /// write_header writes a header.
+    pub fn write_header(&mut self, header: &[u8]) -> Result<(), Error> {
+        self.write_bytes(header)
+    }
+
     /// write_type writes a type.
     pub fn write_type(&mut self, typ: Type) -> Result<(), Error> {
         self.write_u16(typ as u16)
