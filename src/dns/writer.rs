@@ -13,7 +13,9 @@
 // limitations under the License.
 
 use crate::dns::class::Class;
+use crate::dns::class::UNICAST_RESPONSE_MASK;
 use crate::dns::error::Error;
+use crate::dns::record::Record;
 use crate::dns::typ::Type;
 
 /// Writer represents a DNS writer.
@@ -95,6 +97,26 @@ impl Writer {
             }
         }
         self.write_u8(0)?;
+        Ok(())
+    }
+
+    /// write_request_record writes a request record.
+    pub fn write_request_record(&mut self, record: &Record) -> Result<(), Error> {
+        self.write_name(record.name())?;
+        self.write_type(record.typ())?;
+        let mut cls = record.class() as u16;
+        if record.unicast_response() {
+            cls |= UNICAST_RESPONSE_MASK;
+        }
+        self.write_u16(cls)?;
+        Ok(())
+    }
+
+    /// write_resource_record writes a resource record.
+    pub fn write_resource_record(&mut self, record: &Record) -> Result<(), Error> {
+        self.write_request_record(record)?;
+        self.write_ttl(record.ttl())?;
+        self.write_data(record.data())?;
         Ok(())
     }
 
