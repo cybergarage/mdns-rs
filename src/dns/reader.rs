@@ -131,7 +131,7 @@ impl<'a> Reader<'a> {
                     ((label_len as usize) & 0x3f) << 8 | self.buffer[self.cursor + 1] as usize;
                 self.cursor += 2;
                 let mut reader = Reader::from_bytes(&self.buffer[offset..]);
-                let mut compressed_name = reader.read_name()?;
+                let compressed_name = reader.read_name()?;
                 if 0 < name.len() {
                     name.push('.');
                 }
