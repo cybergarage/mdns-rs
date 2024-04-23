@@ -18,13 +18,14 @@ use crate::dns::class::*;
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::typ::*;
+use crate::dns::writer::Writer;
 
 /// A structure representing a DNS record.
 pub struct Record {
     name: String,
     data: Vec<u8>,
     typ: Type,
-    class: Class,
+    cls: Class,
     unicast_response: bool,
     ttl: u32,
 }
@@ -36,7 +37,7 @@ impl Record {
             name: String::new(),
             data: Vec::new(),
             typ: Type::NONE,
-            class: Class::NONE,
+            cls: Class::NONE,
             unicast_response: false,
             ttl: 0,
         }
@@ -64,12 +65,12 @@ impl Record {
 
     /// set_class sets the class of the record.
     pub fn set_class(&mut self, class: Class) {
-        self.class = class;
+        self.cls = class;
     }
 
     /// class returns the class of the record.
     pub fn class(&self) -> Class {
-        self.class
+        self.cls
     }
 
     /// set_data sets the data of the record.
@@ -135,22 +136,23 @@ impl Record {
 
         // Parse class.
         let cls = reader.read_u16()?;
-        self.class = Class::from_value(cls & CLASS_MASK);
+        self.cls = Class::from_value(cls & CLASS_MASK);
         self.unicast_response = (cls & UNICAST_RESPONSE_MASK) != 0;
 
         Ok(())
     }
 
     /// to_request_bytes returns the request bytes of the record.
-    pub fn to_request_bytes(&self) -> Vec<u8> {
-        let mut data = Vec::new();
-        data.extend_from_slice(self.name.as_bytes());
-        data.extend_from_slice(&self.typ.to_value().to_be_bytes());
-        // data.extend_from_slice(&((self.class.to_value() << CLASS_SHIFT) | (self.unicast_response as u16)).to_be_bytes());
-        data.extend_from_slice(&self.ttl.to_be_bytes());
-        data.extend_from_slice(&(self.data.len() as u16).to_be_bytes());
-        data.extend_from_slice(&self.data);
-        data
+    pub fn to_request_bytes(&self) -> Result<Vec<u8>, Error> {
+        let mut writer = Writer::new();
+        writer.write_name(&self.name)?;
+        writer.write_type(self.typ)?;
+        let mut cls = self.cls as u16;
+        if self.unicast_response {
+            cls |= UNICAST_RESPONSE_MASK;
+        }
+        writer.write_u16(cls)?;
+        Ok(writer.to_bytes())
     }
 }
 
