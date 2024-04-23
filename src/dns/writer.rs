@@ -88,7 +88,7 @@ impl Writer {
 
     /// write_name writes a domain name.
     pub fn write_name(&mut self, name: &str) -> Result<(), Error> {
-        let mut labels = name.split('.');
+        let labels = name.split('.');
         for label in labels {
             let len = label.len();
             self.write_u8(len as u8)?;
