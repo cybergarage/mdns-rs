@@ -33,7 +33,7 @@ mod a_record;
 mod aaaa_record;
 mod class;
 mod error;
-mod message;
+pub mod message;
 mod nsec_record;
 mod ptr_record;
 mod question_record;
