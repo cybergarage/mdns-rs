@@ -18,7 +18,8 @@ use std::sync::Mutex;
 use cybergarage::net::{MulticastManager, Observer, Packet};
 
 use crate::default::{MULTICAST_V4_ADDR, MULTICAST_V6_ADDR, PORT};
-use crate::dns::{Message, QuestionRecord, Record, ResourceRecords, Type};
+use crate::dns::message::Message;
+use crate::message::QueryMessage;
 use crate::query::Query;
 use crate::service::Service;
 
@@ -43,9 +44,17 @@ impl Client {
     }
 
     ///query queries the client.
-    pub fn query(&mut self, query: &Query) {
-        let mut q = QuestionRecord::new();
-        q.set_name(&query.to_string());
+    pub fn query(&mut self, query: &Query) -> bool {
+        let q = QueryMessage::new(query);
+        match q.to_bytes() {
+            Ok(bytes) => {
+                let pkt = Packet::from_bytes(&bytes);
+                return self.transport_mgr.notify(&pkt);
+            }
+            Err(_) => {
+                return false;
+            }
+        }
     }
 
     /// is_running returns true if the client is running.
