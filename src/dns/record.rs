@@ -18,7 +18,6 @@ use crate::dns::class::*;
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::typ::*;
-use crate::dns::writer::Writer;
 
 /// A structure representing a DNS record.
 pub struct Record {
