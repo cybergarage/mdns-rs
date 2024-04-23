@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::{AAAARecord, ARecord, Error, Message, Record, ResourceRecords, Type};
+use crate::dns::{Error, Message};
 use crate::query::Query;
-use std::collections::HashMap;
-use std::net::IpAddr;
 
 /// QueryMessage represents a DNS-SD query message.
 pub struct QueryMessage {

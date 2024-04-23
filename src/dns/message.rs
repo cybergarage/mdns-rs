@@ -14,8 +14,6 @@
 
 use std::fmt;
 
-use crate::dns::a_record::ARecord;
-use crate::dns::aaaa_record::AAAARecord;
 use crate::dns::error::Error;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
