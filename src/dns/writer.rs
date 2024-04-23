@@ -92,4 +92,9 @@ impl Writer {
         self.write_u8(0)?;
         Ok(())
     }
+
+    /// to_bytes returns the byte slice.
+    pub fn to_bytes(&self) -> Vec<u8> {
+        self.buffer.clone()
+    }
 }
