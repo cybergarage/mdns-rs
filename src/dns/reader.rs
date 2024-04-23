@@ -116,7 +116,6 @@ impl<'a> Reader<'a> {
     /// read_name reads the next name from the buffer.
     pub fn read_name(&mut self) -> Result<String, Error> {
         let mut name = String::new();
-        let mut is_compressed = false;
         loop {
             let label_len = self.buffer[self.cursor] as usize;
             if label_len == 0 {
@@ -124,9 +123,6 @@ impl<'a> Reader<'a> {
                 break;
             }
             if label_len & 0xc0 == 0xc0 {
-                if !is_compressed {
-                    is_compressed = true;
-                }
                 let offset =
                     ((label_len as usize) & 0x3f) << 8 | self.buffer[self.cursor + 1] as usize;
                 self.cursor += 2;
