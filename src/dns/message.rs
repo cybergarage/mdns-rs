@@ -88,6 +88,12 @@ impl Message {
         ((self.header[0] as u16) << 8) | (self.header[1] as u16)
     }
 
+    /// set_id sets the query identifier.
+    pub fn set_id(&mut self, id: u16) {
+        self.header[0] = ((id >> 8) & 0xFF) as u8;
+        self.header[1] = (id & 0xFF) as u8;
+    }
+
     /// qr returns the query type.
     /// RFC 6762: 18.2. QR (Query/Response) Bit
     /// In query messages the QR bit MUST be zero. In response messages the QR bit MUST be one.
@@ -96,6 +102,14 @@ impl Message {
             return QR::Query;
         }
         QR::Response
+    }
+
+    /// set_qr sets the query type.
+    pub fn set_qr(&mut self, qr: QR) {
+        match qr {
+            QR::Query => self.header[2] &= 0x7F,
+            QR::Response => self.header[2] |= 0x80,
+        }
     }
 
     /// is_query returns true if the message is a query.
