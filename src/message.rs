@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::{Message, Result};
+use crate::dns::{Message, QuestionRecord, Result};
 use crate::query::Query;
 
 /// QueryMessage represents a DNS-SD query message.
@@ -23,9 +23,11 @@ pub struct QueryMessage {
 impl QueryMessage {
     /// Create a new query message.
     pub fn new(q: &Query) -> QueryMessage {
-        QueryMessage {
-            msg: Message::new(),
-        }
+        let mut msg = Message::new();
+        let mut qr = QuestionRecord::new();
+        qr.set_name(&q.to_string());
+        msg.add_question(qr);
+        QueryMessage { msg: msg }
     }
 
     /// set_id sets the ID of the query message.
