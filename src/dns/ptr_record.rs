@@ -34,7 +34,7 @@ impl PTRRecord {
         let domain_name = reader.read_name()?;
         let ptr = PTRRecord {
             name: record.name().to_string(),
-            domain_name: String::new(),
+            domain_name: domain_name.to_string(),
         };
         Ok(ptr)
     }
