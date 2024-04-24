@@ -27,6 +27,14 @@ impl Query {
         }
     }
 
+    /// with creates a new query with the specified service and domain.
+    pub fn with(service: &str, domain: &str) -> Query {
+        Query {
+            service: service.to_string(),
+            domain: domain.to_string(),
+        }
+    }
+
     /// set_service sets the service of the query.
     pub fn set_service(&mut self, service: &str) {
         self.service = service.to_string();
