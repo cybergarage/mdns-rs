@@ -236,9 +236,22 @@ impl Message {
     pub fn ar_count(&self) -> u16 {
         self.number_of_entries(10)
     }
+
+    /// add_question adds the specified question.
+    pub fn add_question(&mut self, question: Record) {
+        self.questions.push(question);
+        self.set_qd_count(self.questions.len() as u16);
+    }
+
     /// questions returns the questions.
     pub fn questions(&self) -> &Records {
         &self.questions
+    }
+
+    /// add_answer adds the specified answer.
+    pub fn add_answer(&mut self, answer: Record) {
+        self.answers.push(answer);
+        self.set_an_count(self.answers.len() as u16);
     }
 
     /// answers returns the answers.
@@ -246,9 +259,21 @@ impl Message {
         &self.answers
     }
 
+    /// add_authority adds the specified authority.
+    pub fn add_authority(&mut self, authority: Record) {
+        self.authorities.push(authority);
+        self.set_ns_count(self.authorities.len() as u16);
+    }
+
     /// authorities returns the authorities.
     pub fn authorities(&self) -> &Records {
         &self.authorities
+    }
+
+    /// add_additional adds the specified additional.
+    pub fn add_additional(&mut self, additional: Record) {
+        self.additionals.push(additional);
+        self.set_ar_count(self.additionals.len() as u16);
     }
 
     /// additionals returns the additionals.
