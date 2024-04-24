@@ -15,7 +15,7 @@
 use std::fmt;
 
 use crate::dns::class::*;
-use crate::dns::error::{Error, Result};
+use crate::dns::error::Result;
 use crate::dns::reader::Reader;
 use crate::dns::typ::*;
 
