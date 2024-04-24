@@ -12,7 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::dns::class::Class;
 use crate::dns::record::Record;
+use crate::dns::typ::Type;
 
 // QuestionRecord represents a question record.
-pub type QuestionRecord = Record;
+pub struct QuestionRecord {}
+
+impl QuestionRecord {
+    /// Create a new question record.
+    pub fn new() -> Record {
+        let mut record = Record::new();
+        record.set_typ(Type::PTR);
+        record.set_class(Class::IN);
+        record
+    }
+}
