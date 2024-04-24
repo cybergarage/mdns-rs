@@ -132,4 +132,19 @@ impl Service {
             },
         }
     }
+
+    pub fn to_string(&self) -> String {
+        let mut s = String::new();
+        s.push_str(&format!("name: {}\n", self.name));
+        s.push_str(&format!("domain: {}\n", self.domain));
+        s.push_str(&format!("host: {}\n", self.host));
+        s.push_str(&format!("port: {}\n", self.port));
+        for ipaddr in &self.ipaddrs {
+            s.push_str(&format!("ipaddr: {}\n", ipaddr));
+        }
+        for (key, value) in &self.attrs {
+            s.push_str(&format!("{}: {}\n", key, value));
+        }
+        s
+    }
 }
