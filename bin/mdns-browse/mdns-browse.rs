@@ -14,9 +14,10 @@
 
 use std::env;
 use std::io::Error;
+use std::{thread, time};
 
 use cybergarage::log::Logger;
-use mdns::Client;
+use mdns::{Client, Query};
 
 fn usages() {
     println!("Usage: mdns-browse");
@@ -40,8 +41,30 @@ fn main() -> Result<(), Error> {
 
     let client = Client::new();
 
-    client.lock().unwrap().start();
-    client.lock().unwrap().stop();
+    {
+        client.lock().unwrap().start();
+    }
+
+    {
+        let queries = vec![Query::with("_services._dns-sd._udp", "local")];
+        for query in &queries {
+            client.lock().unwrap().search(query);
+        }
+    }
+
+    let ten_millis = time::Duration::from_millis(10);
+    thread::sleep(ten_millis);
+
+    {
+        let binding = client.lock().unwrap();
+        for service in binding.services() {
+            println!("Service : {}", service.to_string());
+        }
+    }
+
+    {
+        client.lock().unwrap().stop();
+    }
 
     Ok(())
 }
