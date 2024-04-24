@@ -16,22 +16,15 @@ use crate::dns::{Message, QuestionRecord, Result};
 use crate::query::Query;
 
 /// QueryMessage represents a DNS-SD query message.
-pub struct QueryMessage {
-    msg: Message,
-}
+pub struct QueryMessage {}
 
 impl QueryMessage {
     /// Create a new query message.
-    pub fn new(q: &Query) -> QueryMessage {
+    pub fn new(q: &Query) -> Message {
         let mut msg = Message::new();
         let mut qr = QuestionRecord::new();
         qr.set_name(&q.to_string());
         msg.add_question(qr);
-        QueryMessage { msg: msg }
-    }
-
-    /// set_id sets the ID of the query message.
-    pub fn to_bytes(&self) -> Result<Vec<u8>> {
-        self.msg.bytes()
+        msg
     }
 }

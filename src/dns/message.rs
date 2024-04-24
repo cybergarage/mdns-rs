@@ -393,11 +393,8 @@ impl Message {
         msg_str
     }
 
-    pub fn equals(&self, msg: &Message) -> bool {
-        true
-    }
-
-    pub fn bytes(&self) -> Result<Vec<u8>> {
+    /// to_bytes returns the message as bytes.
+    pub fn to_bytes(&self) -> Result<Vec<u8>> {
         let mut w = Writer::new();
         w.write_bytes(&self.header)?;
         for question in self.questions() {
@@ -419,7 +416,7 @@ impl Message {
 impl Clone for Message {
     fn clone(&self) -> Message {
         let mut msg = Message::new();
-        match msg.bytes() {
+        match msg.to_bytes() {
             Ok(bytes) => {
                 let _ = msg.parse_bytes(&bytes);
             }
