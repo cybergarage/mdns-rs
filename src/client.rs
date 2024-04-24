@@ -43,8 +43,8 @@ impl Client {
         client
     }
 
-    ///query queries the client.
-    pub fn query(&mut self, query: &Query) -> bool {
+    ///search queries the client.
+    pub fn search(&mut self, query: &Query) -> bool {
         let q = QueryMessage::new(query);
         match q.to_bytes() {
             Ok(bytes) => {
