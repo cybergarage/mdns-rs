@@ -57,9 +57,9 @@ impl Client {
         }
     }
 
-    /// is_running returns true if the client is running.
-    pub fn is_running(&self) -> bool {
-        self.transport_mgr.is_running()
+    /// services returns the services of the client.
+    pub fn services(&self) -> &Vec<Service> {
+        &self.services
     }
 
     /// start starts the client.
