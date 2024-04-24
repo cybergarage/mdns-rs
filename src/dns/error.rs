@@ -44,6 +44,11 @@ impl Error {
             ),
         }
     }
+
+    /// message returns the error message.
+    pub fn message(&self) -> &str {
+        &self.msg
+    }
 }
 
 impl std::fmt::Display for Error {
