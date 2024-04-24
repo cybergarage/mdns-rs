@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::{Error, Message};
+use crate::dns::{Error, Message, Result};
 use crate::query::Query;
 
 /// QueryMessage represents a DNS-SD query message.
@@ -29,7 +29,7 @@ impl QueryMessage {
     }
 
     /// set_id sets the ID of the query message.
-    pub fn to_bytes(&self) -> Result<Vec<u8>, Error> {
+    pub fn to_bytes(&self) -> Result<Vec<u8>> {
         self.msg.bytes()
     }
 }

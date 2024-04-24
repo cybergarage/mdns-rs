@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::error::Error;
+use crate::dns::error::{Error, Result};
 
 pub struct Reader<'a> {
     buffer: &'a [u8],
@@ -42,7 +42,7 @@ impl<'a> Reader<'a> {
     }
 
     // read_u8 reads the next byte from the buffer.
-    pub fn read_u8(&mut self) -> Result<u8, Error> {
+    pub fn read_u8(&mut self) -> Result<u8> {
         if self.buffer_len < self.cursor {
             return Err(Error::from_bytes(self.buffer, self.cursor));
         }
@@ -52,21 +52,21 @@ impl<'a> Reader<'a> {
     }
 
     /// read_u16 reads the next 16-bit integer from the buffer.
-    pub fn read_u16(&mut self) -> Result<u16, Error> {
+    pub fn read_u16(&mut self) -> Result<u16> {
         let mut buf = [0; 2];
         self.read_bytes(&mut buf)?;
         Ok(u16::from_be_bytes(buf))
     }
 
     /// read_u32 reads the next 32-bit integer from the buffer.
-    pub fn read_u32(&mut self) -> Result<u32, Error> {
+    pub fn read_u32(&mut self) -> Result<u32> {
         let mut buf = [0; 4];
         self.read_bytes(&mut buf)?;
         Ok(u32::from_be_bytes(buf))
     }
 
     /// read_bytes reads the next bytes into the buffer.
-    pub fn read_bytes(&mut self, buf: &mut [u8]) -> Result<(), Error> {
+    pub fn read_bytes(&mut self, buf: &mut [u8]) -> Result<()> {
         if self.buffer_len < self.cursor + buf.len() {
             return Err(Error::from_bytes(self.buffer, self.cursor));
         }
@@ -76,7 +76,7 @@ impl<'a> Reader<'a> {
     }
 
     /// read_string_size reads the next string size from the buffer.
-    pub fn read_string_size(&mut self) -> Result<usize, Error> {
+    pub fn read_string_size(&mut self) -> Result<usize> {
         if self.buffer_len < self.cursor {
             return Err(Error::from_bytes(self.buffer, self.cursor));
         }
@@ -86,7 +86,7 @@ impl<'a> Reader<'a> {
     }
 
     /// read_string reads the next string from the buffer.
-    pub fn read_string(&mut self) -> Result<String, Error> {
+    pub fn read_string(&mut self) -> Result<String> {
         let str_len = self.read_string_size()?;
         if self.buffer_len < self.cursor + str_len {
             return Err(Error::from_bytes(self.buffer, self.cursor));
@@ -96,7 +96,7 @@ impl<'a> Reader<'a> {
         Ok(String::from_utf8(str_bytes.to_vec()).unwrap())
     }
 
-    pub fn read_strings(&mut self) -> Result<Vec<String>, Error> {
+    pub fn read_strings(&mut self) -> Result<Vec<String>> {
         let mut strs = Vec::new();
         loop {
             let str_len = self.read_string_size()?;
@@ -114,7 +114,7 @@ impl<'a> Reader<'a> {
     }
 
     /// read_name reads the next name from the buffer.
-    pub fn read_name(&mut self) -> Result<String, Error> {
+    pub fn read_name(&mut self) -> Result<String> {
         let mut name = String::new();
         loop {
             let label_len = self.buffer[self.cursor] as usize;

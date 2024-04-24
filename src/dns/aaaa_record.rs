@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::error::Error;
+use crate::dns::error::{Error, Result};
 use crate::dns::record::Record;
 use crate::dns::resource_record::ResourceRecord;
 use crate::dns::typ::Type;
@@ -27,7 +27,7 @@ pub struct AAAARecord {
 
 impl AAAARecord {
     /// from_record creates a new AAAA record from the specified record.
-    pub fn from_record(record: &Record) -> Result<AAAARecord, Error> {
+    pub fn from_record(record: &Record) -> Result<AAAARecord> {
         let data = record.data();
         let addr = if data.len() >= 16 {
             let arr: [u8; 16] = data[0..16].try_into().unwrap();

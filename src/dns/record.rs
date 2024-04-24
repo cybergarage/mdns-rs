@@ -15,7 +15,7 @@
 use std::fmt;
 
 use crate::dns::class::*;
-use crate::dns::error::Error;
+use crate::dns::error::{Error, Result};
 use crate::dns::reader::Reader;
 use crate::dns::typ::*;
 
@@ -103,13 +103,13 @@ impl Record {
     }
 
     /// parse_request_record parses a request record.
-    pub fn parse_request_record(&mut self, reader: &mut Reader) -> Result<(), Error> {
+    pub fn parse_request_record(&mut self, reader: &mut Reader) -> Result<()> {
         self.parse_section(reader)?;
         Ok(())
     }
 
     /// parse_resource_record parses a resource record.
-    pub fn parse_resource_record(&mut self, reader: &mut Reader) -> Result<(), Error> {
+    pub fn parse_resource_record(&mut self, reader: &mut Reader) -> Result<()> {
         self.parse_section(reader)?;
 
         // Parse TTL.
@@ -126,7 +126,7 @@ impl Record {
         Ok(())
     }
 
-    fn parse_section(&mut self, reader: &mut Reader) -> Result<(), Error> {
+    fn parse_section(&mut self, reader: &mut Reader) -> Result<()> {
         // Parse domain name.
         self.name = reader.read_name()?;
 

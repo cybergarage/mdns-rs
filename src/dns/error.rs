@@ -13,32 +13,31 @@
 // limitations under the License.
 
 use hex;
-use std::fmt;
+
+pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug, Clone)]
 pub struct Error {
-    pub message: String,
+    pub msg: String,
 }
 
 impl Error {
     /// from_str creates a new Error with the specified string.
     pub fn from_str(str: &str) -> Error {
         Error {
-            message: str.to_string(),
+            msg: str.to_string(),
         }
     }
 
     /// from_string creates a new Error with the specified string.
     pub fn from_string(str: &String) -> Error {
-        Error {
-            message: str.clone(),
-        }
+        Error { msg: str.clone() }
     }
 
     /// from_bytes creates a new Error with the specified bytes.
     pub fn from_bytes(msg_bytes: &[u8], offset: usize) -> Error {
         Error {
-            message: format!(
+            msg: format!(
                 "Invalid bytes {} (offset:{})",
                 hex::encode(msg_bytes),
                 offset
@@ -47,10 +46,14 @@ impl Error {
     }
 }
 
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.message)
+impl std::fmt::Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.msg)
     }
 }
 
-impl std::error::Error for Error {}
+impl std::error::Error for Error {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        None
+    }
+}

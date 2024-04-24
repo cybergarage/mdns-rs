@@ -14,7 +14,7 @@
 
 use std::fmt;
 
-use crate::dns::error::Error;
+use crate::dns::error::{Error, Result};
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
 use crate::dns::records::Records;
@@ -71,7 +71,7 @@ impl Message {
     }
 
     /// from_bytes creates a new message from the specified bytes.
-    pub fn from_bytes(msg_bytes: &[u8]) -> Result<Message, Error> {
+    pub fn from_bytes(msg_bytes: &[u8]) -> Result<Message> {
         let mut msg = Message::new();
         let ret = msg.parse_bytes(msg_bytes);
         if ret.is_err() {
@@ -281,7 +281,7 @@ impl Message {
     }
 
     /// parse_bytes parses the specified message bytes.
-    pub fn parse_bytes(&mut self, msg_bytes: &[u8]) -> Result<(), Error> {
+    pub fn parse_bytes(&mut self, msg_bytes: &[u8]) -> Result<()> {
         let mut reader = Reader::from_bytes(msg_bytes);
 
         // Header
@@ -372,7 +372,7 @@ impl Message {
         true
     }
 
-    pub fn bytes(&self) -> Result<Vec<u8>, Error> {
+    pub fn bytes(&self) -> Result<Vec<u8>> {
         let mut w = Writer::new();
         w.write_bytes(&self.header)?;
         for question in self.questions() {

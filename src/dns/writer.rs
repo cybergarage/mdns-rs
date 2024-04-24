@@ -14,7 +14,7 @@
 
 use crate::dns::class::Class;
 use crate::dns::class::UNICAST_RESPONSE_MASK;
-use crate::dns::error::Error;
+use crate::dns::error::Result;
 use crate::dns::record::Record;
 use crate::dns::typ::Type;
 
@@ -30,20 +30,20 @@ impl Writer {
     }
 
     /// write_u8 writes a u8 value.
-    pub fn write_u8(&mut self, value: u8) -> Result<(), Error> {
+    pub fn write_u8(&mut self, value: u8) -> Result<()> {
         self.buffer.push(value);
         Ok(())
     }
 
     /// write_u16 writes a u16 value.
-    pub fn write_u16(&mut self, value: u16) -> Result<(), Error> {
+    pub fn write_u16(&mut self, value: u16) -> Result<()> {
         self.buffer.push(((value >> 8) & 0xff) as u8);
         self.buffer.push((value & 0xff) as u8);
         Ok(())
     }
 
     /// write_u32 writes a u32 value.
-    pub fn write_u32(&mut self, value: u32) -> Result<(), Error> {
+    pub fn write_u32(&mut self, value: u32) -> Result<()> {
         self.buffer.push(((value >> 24) & 0xff) as u8);
         self.buffer.push(((value >> 16) & 0xff) as u8);
         self.buffer.push(((value >> 8) & 0xff) as u8);
@@ -52,7 +52,7 @@ impl Writer {
     }
 
     /// write_bytes writes a byte slice.
-    pub fn write_bytes(&mut self, bytes: &[u8]) -> Result<(), Error> {
+    pub fn write_bytes(&mut self, bytes: &[u8]) -> Result<()> {
         for b in bytes {
             self.buffer.push(*b);
         }
@@ -60,34 +60,34 @@ impl Writer {
     }
 
     /// write_header writes a header.
-    pub fn write_header(&mut self, header: &[u8]) -> Result<(), Error> {
+    pub fn write_header(&mut self, header: &[u8]) -> Result<()> {
         self.write_bytes(header)
     }
 
     /// write_type writes a type.
-    pub fn write_type(&mut self, typ: Type) -> Result<(), Error> {
+    pub fn write_type(&mut self, typ: Type) -> Result<()> {
         self.write_u16(typ as u16)
     }
 
     /// write_class writes a class.
-    pub fn write_class(&mut self, class: Class) -> Result<(), Error> {
+    pub fn write_class(&mut self, class: Class) -> Result<()> {
         self.write_u16(class as u16)
     }
 
     /// write_ttl writes a TTL.
-    pub fn write_ttl(&mut self, ttl: u32) -> Result<(), Error> {
+    pub fn write_ttl(&mut self, ttl: u32) -> Result<()> {
         self.write_u32(ttl)
     }
 
     /// write_data writes data.
-    pub fn write_data(&mut self, data: &[u8]) -> Result<(), Error> {
+    pub fn write_data(&mut self, data: &[u8]) -> Result<()> {
         let len = data.len();
         self.write_u16(len as u16)?;
         self.write_bytes(data)
     }
 
     /// write_name writes a domain name.
-    pub fn write_name(&mut self, name: &str) -> Result<(), Error> {
+    pub fn write_name(&mut self, name: &str) -> Result<()> {
         let labels = name.split('.');
         for label in labels {
             let len = label.len();
@@ -101,7 +101,7 @@ impl Writer {
     }
 
     /// write_request_record writes a request record.
-    pub fn write_request_record(&mut self, record: &Record) -> Result<(), Error> {
+    pub fn write_request_record(&mut self, record: &Record) -> Result<()> {
         self.write_name(record.name())?;
         self.write_type(record.typ())?;
         let mut cls = record.class() as u16;
@@ -113,7 +113,7 @@ impl Writer {
     }
 
     /// write_response_record writes a response record.
-    pub fn write_response_record(&mut self, record: &Record) -> Result<(), Error> {
+    pub fn write_response_record(&mut self, record: &Record) -> Result<()> {
         self.write_request_record(record)?;
         self.write_ttl(record.ttl())?;
         self.write_data(record.data())?;

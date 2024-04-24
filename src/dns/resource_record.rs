@@ -14,7 +14,7 @@
 
 use crate::dns::a_record::ARecord;
 use crate::dns::aaaa_record::AAAARecord;
-use crate::dns::error::Error;
+use crate::dns::error::{Error, Result};
 use crate::dns::nsec_record::NSECRecord;
 use crate::dns::ptr_record::PTRRecord;
 use crate::dns::record::Record;
@@ -33,7 +33,7 @@ pub trait ResourceRecord: Send {
 }
 
 impl Record {
-    pub fn to_resource_record(&self) -> Result<Box<dyn ResourceRecord>, Error> {
+    pub fn to_resource_record(&self) -> Result<Box<dyn ResourceRecord>> {
         match self.typ() {
             Type::A => Ok(Box::new(ARecord::from_record(self)?)),
             Type::AAAA => Ok(Box::new(AAAARecord::from_record(self)?)),

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::error::Error;
+use crate::dns::error::Result;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
 use crate::dns::resource_record::ResourceRecord;
@@ -28,7 +28,7 @@ pub struct TXTRecord {
 
 impl TXTRecord {
     /// from_record creates a new TXT record from the specified record.
-    pub fn from_record(record: &Record) -> Result<TXTRecord, Error> {
+    pub fn from_record(record: &Record) -> Result<TXTRecord> {
         let data = record.data();
         let mut reader = Reader::from_bytes(data);
         let strs = reader.read_strings()?;

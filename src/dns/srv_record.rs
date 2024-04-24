@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::error::Error;
+use crate::dns::error::Result;
 use crate::dns::reader::Reader;
 use crate::dns::record::Record;
 use crate::dns::resource_record::ResourceRecord;
@@ -32,7 +32,7 @@ pub struct SRVRecord {
 
 impl SRVRecord {
     /// from_record creates a new SRV record from the specified record.
-    pub fn from_record(record: &Record) -> Result<SRVRecord, Error> {
+    pub fn from_record(record: &Record) -> Result<SRVRecord> {
         let mut srv = SRVRecord {
             service: "".to_string(),
             proto: "".to_string(),

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::error::Error;
+use crate::dns::error::Result;
 use crate::dns::record::Record;
 use crate::dns::resource_record::ResourceRecord;
 use crate::dns::typ::Type;
@@ -25,7 +25,7 @@ pub struct NSECRecord {
 
 impl NSECRecord {
     /// from_record creates a new NSEC record from the specified record.
-    pub fn from_record(record: &Record) -> Result<NSECRecord, Error> {
+    pub fn from_record(record: &Record) -> Result<NSECRecord> {
         Ok(NSECRecord {
             name: record.name().to_string(),
         })
