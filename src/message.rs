@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::dns::{Message, QuestionRecord, Result};
+use crate::dns::{Message, QuestionRecord};
 use crate::query::Query;
 
 /// QueryMessage represents a DNS-SD query message.
