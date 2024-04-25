@@ -104,7 +104,6 @@ impl Service {
     }
 
     fn parse_record(&mut self, record: &Record) {
-        let data = record.data();
         match record.typ() {
             Type::SRV => {
                 let srv = crate::dns::SRVRecord::from_record(record).unwrap();
