@@ -117,7 +117,6 @@ impl Service {
                 let txt = crate::dns::TXTRecord::from_record(record).unwrap();
                 self.attrs = txt.attributes().clone();
             }
-            _ => {}
             Type::A => match ARecord::from_record(record) {
                 Ok(a) => {
                     self.ipaddrs.push(a.ipaddr().clone());
@@ -130,6 +129,7 @@ impl Service {
                 }
                 _ => {}
             },
+            _ => {}
         }
     }
 
