@@ -16,7 +16,7 @@ use std::fmt::*;
 
 pub const TYPE_MASK: u16 = 0x7fff;
 
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Type {
     NONE = 0x0000,
     A = 0x0001,
