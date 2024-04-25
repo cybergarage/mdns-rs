@@ -31,12 +31,20 @@ mod tests {
             expected: Expected,
         }
 
-        let tests = vec![Test {
-            query: Query::with("_http._tcp", "local"),
-            expected: Expected {
-                name: "_http._tcp.local".to_string(),
+        let tests = vec![
+            Test {
+                query: Query::with("_http._tcp", "local"),
+                expected: Expected {
+                    name: "_http._tcp.local".to_string(),
+                },
             },
-        }];
+            Test {
+                query: Query::with("_matterc._udp", "local"),
+                expected: Expected {
+                    name: "_matterc._udp.local".to_string(),
+                },
+            },
+        ];
 
         for test in tests {
             let query = QueryMessage::new(&test.query);
