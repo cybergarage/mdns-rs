@@ -26,3 +26,4 @@ pub mod query;
 pub mod service;
 
 mod client_test;
+mod message_test;
