@@ -18,7 +18,7 @@ mod tests {
     use crate::dns::message::Message;
 
     #[test]
-    fn message_parse() {
+    fn parse_message() {
         struct Expected {
             qd_count: u16,
             an_count: u16,
