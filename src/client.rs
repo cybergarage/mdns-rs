@@ -15,14 +15,8 @@
 use std::sync::Arc;
 use std::sync::Mutex;
 
-use cybergarage::net::{MulticastManager, Observer, Packet};
-
-use crate::default::{MULTICAST_V4_ADDR, MULTICAST_V6_ADDR, PORT};
 use crate::discoverer::Discoverer;
-use crate::dns::message::Message;
-use crate::message::QueryMessage;
 use crate::query::Query;
-use crate::service;
 use crate::service::Service;
 
 /// Client represents a client.
