@@ -147,3 +147,9 @@ impl Service {
         s
     }
 }
+
+impl Clone for Service {
+    fn clone(&self) -> Service {
+        Service::from_message(&self.msg.clone())
+    }
+}
