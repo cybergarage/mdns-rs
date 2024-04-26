@@ -52,5 +52,9 @@ fn main() -> Result<(), Error> {
 
     client.stop();
 
+    for service in client.services() {
+        println!("Service : {}", service);
+    }
+
     Ok(())
 }
