@@ -19,8 +19,7 @@ mod tests {
 
     #[test]
     fn client() {
-        let client = Client::new();
-        let mut client: std::sync::MutexGuard<'_, Client> = client.lock().unwrap();
+        let mut client = Client::new();
         assert!(client.start());
         assert!(client.stop());
     }

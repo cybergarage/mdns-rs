@@ -39,32 +39,18 @@ fn main() -> Result<(), Error> {
         }
     }
 
-    let client = Client::new();
+    let mut client = Client::new();
+    client.start();
 
-    {
-        client.lock().unwrap().start();
-    }
-
-    {
-        let queries = vec![Query::with("_services._dns-sd._udp", "local")];
-        for query in &queries {
-            client.lock().unwrap().search(query);
-        }
+    let queries = vec![Query::with("_services._dns-sd._udp", "local")];
+    for query in &queries {
+        client.search(query);
     }
 
     let ten_millis = time::Duration::from_millis(10);
     thread::sleep(ten_millis);
 
-    {
-        let binding = client.lock().unwrap();
-        for service in binding.services() {
-            println!("Service : {}", service.to_string());
-        }
-    }
-
-    {
-        client.lock().unwrap().stop();
-    }
+    client.stop();
 
     Ok(())
 }

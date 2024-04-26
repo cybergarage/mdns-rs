@@ -18,6 +18,7 @@ use std::sync::Mutex;
 use cybergarage::net::{MulticastManager, Observer, Packet};
 
 use crate::default::{MULTICAST_V4_ADDR, MULTICAST_V6_ADDR, PORT};
+use crate::discoverer::Discoverer;
 use crate::dns::message::Message;
 use crate::message::QueryMessage;
 use crate::query::Query;
@@ -25,76 +26,30 @@ use crate::service::Service;
 
 /// Client represents a client.
 pub struct Client {
-    services: Vec<Service>,
-    transport_mgr: MulticastManager,
+    discoverer: Arc<Mutex<Discoverer>>,
 }
 
 impl Client {
     /// new creates a new client.
-    pub fn new() -> Arc<Mutex<Client>> {
-        let client = Arc::new(Mutex::new(Client {
-            transport_mgr: MulticastManager::new(),
-            services: Vec::new(),
-        }));
-        {
-            let mut client_lock = client.lock().unwrap();
-            client_lock.transport_mgr.add_observer(client.clone());
-        } // client_lock is dropped here
-        client
+    pub fn new() -> Client {
+        Client {
+            discoverer: Discoverer::new(),
+        }
     }
 
     ///search queries the client.
     pub fn search(&mut self, query: &Query) -> bool {
-        let q = QueryMessage::new(query);
-        match q.to_bytes() {
-            Ok(bytes) => {
-                let pkt = Packet::from_bytes(&bytes);
-                return self.transport_mgr.notify(&pkt);
-            }
-            Err(_) => {
-                return false;
-            }
-        }
-    }
-
-    /// services returns the services of the client.
-    pub fn services(&self) -> &Vec<Service> {
-        &self.services
+        self.discoverer.lock().unwrap().search(query)
     }
 
     /// start starts the client.
     pub fn start(&mut self) -> bool {
-        if self.transport_mgr.is_running() {
-            return true;
-        }
-        let addrs = vec![MULTICAST_V6_ADDR, MULTICAST_V4_ADDR];
-        if !self.transport_mgr.start(&addrs, PORT) {
-            return false;
-        }
-        true
+        self.discoverer.lock().unwrap().start()
     }
 
     /// stop stops the client.
     pub fn stop(&mut self) -> bool {
-        if !self.transport_mgr.stop() {
-            return false;
-        }
-        true
-    }
-}
-
-impl Observer for Client {
-    fn packet_received(&mut self, pkt: &Packet) {
-        let msg = Message::from_bytes(pkt.bytes());
-        match msg {
-            Ok(msg) => {
-                let service = Service::from_message(&msg);
-                self.services.push(service);
-            }
-            Err(_) => {
-                return;
-            }
-        }
+        self.discoverer.lock().unwrap().stop()
     }
 }
 
