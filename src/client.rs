@@ -22,6 +22,7 @@ use crate::discoverer::Discoverer;
 use crate::dns::message::Message;
 use crate::message::QueryMessage;
 use crate::query::Query;
+use crate::service;
 use crate::service::Service;
 
 /// Client represents a client.
@@ -40,6 +41,15 @@ impl Client {
     ///search queries the client.
     pub fn search(&mut self, query: &Query) -> bool {
         self.discoverer.lock().unwrap().search(query)
+    }
+
+    // services returns the services of the client.
+    pub fn services(&self) -> Vec<Service> {
+        let mut services = Vec::new();
+        for service in self.discoverer.lock().unwrap().services() {
+            services.push(service.clone());
+        }
+        services
     }
 
     /// start starts the client.
