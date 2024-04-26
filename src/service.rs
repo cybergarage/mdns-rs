@@ -14,6 +14,7 @@
 
 use crate::dns::{AAAARecord, ARecord, Message, Record, ResourceRecords, Type};
 use std::collections::HashMap;
+use std::fmt;
 use std::net::IpAddr;
 
 /// Service represents a DNS-SD service.
@@ -151,5 +152,11 @@ impl Service {
 impl Clone for Service {
     fn clone(&self) -> Service {
         Service::from_message(&self.msg.clone())
+    }
+}
+
+impl fmt::Display for Service {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.msg.to_string())
     }
 }
