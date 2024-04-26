@@ -13,12 +13,14 @@
 // limitations under the License.
 
 pub use self::client::Client;
+pub use self::discoverer::Discoverer;
 pub use self::error::{Error, Result};
 pub use self::query::Query;
 pub use self::service::Service;
 
 pub mod client;
 pub mod default;
+pub mod discoverer;
 pub mod dns;
 pub mod error;
 pub mod message;
