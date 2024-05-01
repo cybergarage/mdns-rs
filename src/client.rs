@@ -17,6 +17,7 @@ use std::sync::Mutex;
 
 use crate::discoverer::Discoverer;
 use crate::query::Query;
+use crate::service::Service;
 
 /// Client represents a client.
 pub struct Client {
