@@ -47,8 +47,8 @@ fn main() -> Result<(), Error> {
         client.search(query);
     }
 
-    let ten_millis = time::Duration::from_millis(10);
-    thread::sleep(ten_millis);
+    let ten_secs = time::Duration::from_secs(10);
+    thread::sleep(ten_secs);
 
     client.stop();
 
