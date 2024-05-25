@@ -15,12 +15,16 @@
 #[cfg(test)]
 mod tests {
 
-    use crate::client::Client;
+    use crate::{Client, Query};
 
     #[test]
     fn client() {
         let mut client = Client::new();
         assert!(client.start());
+        let queries = vec![Query::with("_services._dns-sd._udp", "local")];
+        for query in &queries {
+            assert!(client.search(query));
+        }    
         assert!(client.stop());
     }
 }
