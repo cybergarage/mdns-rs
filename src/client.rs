@@ -15,6 +15,8 @@
 use std::sync::Arc;
 use std::sync::Mutex;
 
+use cybergarage::net::Result;
+
 use crate::discoverer::Discoverer;
 use crate::query::Query;
 use crate::service::Service;
@@ -47,12 +49,12 @@ impl Client {
     }
 
     /// start starts the client.
-    pub fn start(&mut self) -> bool {
+    pub fn start(&mut self) -> Result<()> {
         self.discoverer.lock().unwrap().start()
     }
 
     /// stop stops the client.
-    pub fn stop(&mut self) -> bool {
+    pub fn stop(&mut self) -> Result<()> {
         self.discoverer.lock().unwrap().stop()
     }
 }
