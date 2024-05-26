@@ -15,7 +15,7 @@
 use std::sync::Arc;
 use std::sync::Mutex;
 
-use cybergarage::net::{MulticastManager, Observer, Packet};
+use cybergarage::net::{MulticastManager, Observer, Packet, Result};
 
 use crate::default::{MULTICAST_V4_ADDR, MULTICAST_V6_ADDR, PORT};
 use crate::dns::message::Message;
@@ -65,23 +65,21 @@ impl Discoverer {
     }
 
     /// start starts the discoverer.
-    pub fn start(&mut self) -> bool {
+    pub fn start(&mut self) -> Result<()> {
         if self.transport_mgr.is_running() {
-            return true;
+            return Ok(());
         }
         let addrs = vec![MULTICAST_V6_ADDR, MULTICAST_V4_ADDR];
-        if !self.transport_mgr.start(&addrs, PORT) {
-            return false;
+        let ret = self.transport_mgr.start(&addrs, PORT);
+        if ret.is_err() {
+            return ret;
         }
-        true
+        Ok(())
     }
 
     /// stop stops the discoverer.
-    pub fn stop(&mut self) -> bool {
-        if !self.transport_mgr.stop() {
-            return false;
-        }
-        true
+    pub fn stop(&mut self) -> Result<()> {
+        self.transport_mgr.stop()
     }
 }
 
