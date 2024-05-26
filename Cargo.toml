@@ -9,7 +9,7 @@ edition = "2021"
 hex = "0.4"
 # cybergarage = { git = "https://github.com/cybergarage/cybergarage-rs.git" }
 # cybergarage = { path = "../cybergarage-rs/cybergarage" }
-cybergarage = "1.1.3"
+cybergarage = "1.1.4"
 
 [[bin]]
 name = "mdns-browse"

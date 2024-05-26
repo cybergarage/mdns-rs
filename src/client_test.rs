@@ -24,7 +24,7 @@ mod tests {
         let queries = vec![Query::with("_services._dns-sd._udp", "local")];
         for query in &queries {
             assert!(client.search(query));
-        }    
+        }
         assert!(client.stop());
     }
 }
