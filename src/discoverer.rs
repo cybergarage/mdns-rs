@@ -15,7 +15,7 @@
 use std::sync::Arc;
 use std::sync::Mutex;
 
-use cybergarage::net::{MulticastManager, Observer, Packet, Result};
+use cybergarage::net::{MulticastManager, Observer, Packet};
 
 use crate::default::{MULTICAST_V4_ADDR, MULTICAST_V6_ADDR, PORT};
 use crate::dns::message::Message;
@@ -65,7 +65,7 @@ impl Discoverer {
     }
 
     /// start starts the discoverer.
-    pub fn start(&mut self) -> Result<()> {
+    pub fn start(&mut self) -> Result<(), std::io::Error> {
         if self.transport_mgr.is_running() {
             return Ok(());
         }
@@ -78,7 +78,7 @@ impl Discoverer {
     }
 
     /// stop stops the discoverer.
-    pub fn stop(&mut self) -> Result<()> {
+    pub fn stop(&mut self) -> Result<(), std::io::Error> {
         self.transport_mgr.stop()
     }
 }
@@ -100,6 +100,6 @@ impl Observer for Discoverer {
 
 impl Drop for Discoverer {
     fn drop(&mut self) {
-        self.stop();
+        let _ = self.stop();
     }
 }
