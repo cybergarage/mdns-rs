@@ -40,8 +40,10 @@ fn main() -> Result<(), Error> {
     }
 
     let mut client = Client::new();
-    client.start();
-
+    let ret = client.start();
+    if ret.is_err() {
+        return ret;
+    }
     let queries = vec![Query::with("_services._dns-sd._udp", "local")];
     for query in &queries {
         client.search(query);
@@ -50,7 +52,10 @@ fn main() -> Result<(), Error> {
     let ten_secs = time::Duration::from_secs(10);
     thread::sleep(ten_secs);
 
-    client.stop();
+    let ret = client.stop();
+    if ret.is_err() {
+        return ret;
+    }
 
     for service in client.services() {
         println!("Service : {}", service);

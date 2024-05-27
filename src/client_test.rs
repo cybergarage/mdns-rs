@@ -20,11 +20,11 @@ mod tests {
     #[test]
     fn client() {
         let mut client = Client::new();
-        assert!(client.start());
+        assert!(client.start().is_ok());
         let queries = vec![Query::with("_services._dns-sd._udp", "local")];
         for query in &queries {
             assert!(client.search(query));
         }
-        assert!(client.stop());
+        assert!(client.stop().is_ok());
     }
 }
