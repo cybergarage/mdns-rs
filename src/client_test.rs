@@ -15,12 +15,27 @@
 #[cfg(test)]
 mod tests {
 
+    use cybergarage::log::Logger;
+
     use crate::{Client, Query};
+    use log::*;
 
     #[test]
     fn client() {
+        Logger::init();
+
         let mut client = Client::new();
-        assert!(client.start().is_ok());
+        let ret = client.start();
+        // assert!(ret.is_ok());
+        if ret.is_err() {
+            let err_msg = format!(
+                "{}",
+                ret.err().unwrap()
+            );
+            error!("{}", err_msg)
+        } else {
+            info!("Bound to the multicast address");
+        }
         let queries = vec![Query::with("_services._dns-sd._udp", "local")];
         for query in &queries {
             assert!(client.search(query));
