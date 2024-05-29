@@ -35,7 +35,7 @@ doc: format
 	cargo doc --open
 
 test: build
-	cargo test -- --test-threads=1
+	RUST_BACKTRACE=1 cargo test -- --test-threads=1
 
 browse:
 	cargo run --bin mdns-browse -v
