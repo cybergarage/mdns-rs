@@ -10,7 +10,7 @@ log = "0.4"
 hex = "0.4"
 # cybergarage = { git = "https://github.com/cybergarage/cybergarage-rs.git" }
 # cybergarage = { path = "../cybergarage-rs/cybergarage" }
-cybergarage = "1.1.4"
+cybergarage = "1.1.5"
 
 [[bin]]
 name = "mdns-browse"
