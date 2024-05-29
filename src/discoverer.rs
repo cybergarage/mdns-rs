@@ -46,15 +46,15 @@ impl Discoverer {
     }
 
     ///search queries the discoverer.
-    pub fn search(&mut self, query: &Query) -> bool {
+    pub fn search(&mut self, query: &Query) -> Result<(), std::io::Error> {
         let q = QueryMessage::new(query);
         match q.to_bytes() {
             Ok(bytes) => {
                 let pkt = Packet::from_bytes(&bytes);
                 return self.transport_mgr.notify(&pkt);
             }
-            Err(_) => {
-                return false;
+            Err(e) => {
+                return Err(std::io::Error::new(std::io::ErrorKind::Other, e.message()));
             }
         }
     }

@@ -46,7 +46,10 @@ fn main() -> Result<(), Error> {
     }
     let queries = vec![Query::with("_services._dns-sd._udp", "local")];
     for query in &queries {
-        client.search(query);
+        let res = client.search(query);
+        if res.is_err() {
+            return res;
+        }
     }
 
     let ten_secs = time::Duration::from_secs(10);

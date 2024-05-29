@@ -33,7 +33,7 @@ impl Client {
     }
 
     ///search queries the client.
-    pub fn search(&mut self, query: &Query) -> bool {
+    pub fn search(&mut self, query: &Query) -> Result<(), std::io::Error> {
         self.discoverer.lock().unwrap().search(query)
     }
 
